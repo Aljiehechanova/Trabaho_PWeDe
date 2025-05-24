@@ -1,0 +1,125 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #2C3E50;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+/* Choice Container */
+.choice-container {
+  max-width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+}
+
+/* Heading */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Options Container */
+.options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Individual Option */
+.option {
+  width: 48%;
+  position: relative;
+}
+
+
+/* Hide Default Radio */
+.option input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  display: none;
+}
+
+/* Label Styling */
+.option label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+/* Custom Radio Button */
+.option label::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: inline-block;
+  margin-bottom: 10px;
+  transition: 0.3s;
+}
+
+/* Highlight when selected */
+.option input[type="radio"]:checked + label {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+}
+
+/* Change circle when selected */
+.option input[type="radio"]:checked + label::before {
+  border-color: #007bff;
+  background-color: #007bff;
+  box-shadow: inset 0 0 0 4px white;
+}
+
+/* Text inside the option */
+.option p {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Login Link */
+p {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+p a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+p a:hover {
+  text-decoration: underline;
+}

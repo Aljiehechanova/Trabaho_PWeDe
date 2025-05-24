@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+
+.main-content {
+    margin-left: 350px; /* Sidebar is 270px, add 15px buffer */
+    padding: 25px;
+    flex: 1;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.analytics {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 20px;              /* Space between boxes */
+    width: 100%;
+    max-width: 600px;       /* Optional: to keep content centered and tidy */
+    margin: 0 auto;         /* Center horizontally */
+}
+
+.analytics-box {
+    background-color: #fff;
+    border: 2px solid #c2e0c6;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.analytics-box h3 {
+    margin-bottom: 10px;
+}
+.message-form, .message-card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.message-form input, .message-form textarea {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

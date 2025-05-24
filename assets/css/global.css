@@ -1,0 +1,90 @@
+/* Global Reset */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F5F5F5; /* Light gray for contrast */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    background-color: #2C3E50; /* Dark blue for contrast */
+    color: white;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+    text-align: center;
+}
+
+/* Logo Styling */
+.sidebar .logo img {
+    width: 80%;
+    max-width: 200px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* Sidebar Navigation List */
+.sidebar ul {
+    list-style: none !important; /* Ensures bullets show */
+    padding-left: 20px; /* Adds spacing */
+    margin: 0;
+}
+
+/* Sidebar List Items */
+.sidebar ul li {
+    text-align: left;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Sidebar Links */
+.sidebar ul li a {
+    color: #FFD700; /* Gold text for readability */
+    text-decoration: none;
+    padding: 8px;
+    display: block;
+    transition: 0.3s ease-in-out;
+}
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #34495e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .top-navbar button {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border: none;
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .top-navbar button:hover {
+    background-color: #bdc3c7;
+  }
+  
+  /* Adjust layout below navbar */
+  .sidebar {
+    margin-top: 50px; /* push sidebar below navbar */
+  }
+  
+  .main-content {
+    padding-top: 90px; /* prevent overlap with navbar */
+  }
+  

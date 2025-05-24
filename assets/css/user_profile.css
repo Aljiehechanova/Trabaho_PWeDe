@@ -1,0 +1,78 @@
+/* Container styling to match home */
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Header to match hero */
+h2 {
+    color: #FFD700;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Text styling */
+p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+/* Edit Profile Button – match home page style */
+.btn-warning {
+    background-color: #FFC107;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Modal if used */
+.modal-content {
+    background-color: #f9f9f9;
+    color: #2c3e50;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: #ccc;
+}
+
+.modal-content .form-control {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.modal-footer .btn {
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+.modal-dialog {
+    max-width: 400px;
+    margin: 100px auto;
+}
+
+/* Responsive consistency */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 20px;
+    }
+}

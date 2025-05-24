@@ -1,0 +1,109 @@
+/* Main content spacing relative to sidebar */
+.main-content {
+  margin-left: 290px;
+  padding: 40px 30px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Message card and form containers */
+.message-form, .message-card {
+  background: #ffffff;
+  padding: 25px 30px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Input and textarea fields */
+.message-form input, .message-form textarea,
+.modal-content input, .modal-content textarea {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.message-form input:focus, .message-form textarea:focus,
+.modal-content input:focus, .modal-content textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Submit & modal buttons */
+.message-form button,
+.modal-content button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.message-form button:hover,
+.modal-content button:hover {
+  background-color: #2980b9;
+}
+
+/* Modal overlay */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Modal box content */
+.modal-content {
+  background-color: #fff;
+  margin: 100px auto;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Close button for modal */
+.close {
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #000;
+}
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .message-form, .message-card, .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+}

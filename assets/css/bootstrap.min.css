@@ -1,0 +1,160 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2C3E50 !important;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.navbar a {
+    color: #000;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #007bff;
+}
+
+.search-bar {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 200px;
+}
+
+.nav-buttons .btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-login {
+    background: none;
+    color: #000;
+}
+
+.btn-signup {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 50px;
+    background-color: #2C3E50;
+    color: #FFD700;
+}
+
+.hero h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.hero .btn-start {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Workshop Category */
+.workshop-category {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.workshop-category h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.category-grid {
+    display: flex;
+    justify-content: space-around;
+}
+
+.category-grid .category {
+    background: #f0ebff;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 150px;
+}
+
+.category img {
+    width: 80px;
+}
+
+/* Footer */
+.footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+a:focus,
+button:focus,
+input:focus,
+select:focus {
+    outline: 3px dashed #FFD700;
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .category-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .hero .btn-start {
+        width: 100%;
+    }
+}

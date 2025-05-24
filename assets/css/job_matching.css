@@ -1,0 +1,72 @@
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Allows content to expand */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Enables scrolling */
+    padding-top: 80px; /* Prevents overlap with fixed header */
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: calc(100% - 270px);
+    top: 0;
+    left: 270px;
+    z-index: 10;
+}
+
+.search-bar {
+    padding: 8px 15px;
+    border: 2px solid #c2e0c6;
+    border-radius: 20px;
+    width: 250px;
+}
+
+/* Job List Styling */
+.job-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-height: calc(100vh - 120px); /* Adjust for header height */
+    overflow-y: auto;
+    padding-top: 20px;
+}
+
+.job-card {
+    background-color: #fff;
+    border: 2px solid #c2e0c6;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;              /* Controls card width for balance */
+    margin-bottom: 15px;     /* Space between cards */
+    padding: 15px;
+}
+
+.job-card:hover {
+    transform: scale(1.03);
+}
+
+.btn.btn-primary {
+    background-color: #FFD54F;
+    color: #000;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.btn.btn-primary:hover {
+    background-color: #FFA726;
+}
