@@ -9,11 +9,12 @@ $fullname = $_POST['fullname'] ?? '';
 $email = $_POST['email'] ?? '';
 $description = $_POST['description'] ?? '';
 $location = $_POST['location'] ?? '';
+$disability = $_POST['disability'] ?? '';
 
 $userModel = new UserModel($conn);
 $userController = new UserController($userModel);
 
-if ($userController->updateProfile($user_id, $fullname, $email, $description, $location)) {
+if ($userController->updateProfile($user_id, $fullname, $email, $description, $location, $disability)) {
     echo "<script>alert('Profile updated successfully!'); window.location.href = 'userP.php';</script>";
 } else {
     echo "<script>alert('Failed to update profile.'); window.location.href = 'userP.php';</script>";

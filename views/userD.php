@@ -54,7 +54,6 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<!-- Top Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="UserD.php">
@@ -62,7 +61,10 @@ try {
       <span class="fw-bold">TrabahoPWeDe</span>
     </a>
     <div class="ms-auto d-flex align-items-center">
-      <span class="me-3">Welcome, <?= htmlspecialchars($user['fullname']) ?>!</span>
+      <a href="userP.php" class="d-flex align-items-center text-decoration-none me-3">
+        <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
+        <span class="fw-semibold text-dark"><?= htmlspecialchars($user['fullname']) ?></span>
+      </a>
       <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
           Settings
@@ -77,6 +79,7 @@ try {
     </div>
   </div>
 </nav>
+
 
 <!-- Wrapper for Sidebar and Main Content -->
 <div class="d-flex" style="margin-top: 70px;"> <!-- Add top margin to avoid overlap with fixed navbar -->

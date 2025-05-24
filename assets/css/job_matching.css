@@ -1,14 +1,40 @@
+/* Updated .main-content */
 .main-content {
+    background-color: #ffffff !important;
+    border: 2px solid #c2e0c6 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    padding: 30px !important;
+    width: 100% !important;
+    max-width: 800px !important; /* or whatever max width you prefer */
+    margin: 0 auto 20px auto !important; /* Center horizontally */
+  }
+  
+  
+/* Adjust content wrapper for Job Matching page */
+.job-matching-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh; /* Allows content to expand */
-    width: 100%;
-    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 120px 20px 60px;  /* ✅ More top space */
+    min-height: 100vh;
+    background-color: #2C3E50;
     box-sizing: border-box;
-    overflow-y: auto; /* Enables scrolling */
-    padding-top: 80px; /* Prevents overlap with fixed header */
 }
+
+/* Centered Main Content Card */
+.job-matching-wrapper .main-content {
+    background-color: #ffffff;
+    border: 2px solid #c2e0c6;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+  
 
 /* Header Styling */
 .header {
@@ -69,4 +95,13 @@
 
 .btn.btn-primary:hover {
     background-color: #FFA726;
+}
+@media (max-width: 768px) {
+    .job-matching-wrapper {
+        padding: 100px 10px 40px;
+    }
+
+    .job-matching-wrapper .main-content {
+        padding: 25px;
+    }
 }

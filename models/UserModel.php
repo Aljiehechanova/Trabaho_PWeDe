@@ -74,14 +74,14 @@ class UserModel
     {
         return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/', $password);
     }
-    public function updateProfile($user_id, $fullname, $email, $description, $location) {
-        try {
-            $stmt = $this->conn->prepare("UPDATE users SET fullname = ?, email = ?, description = ?, location = ? WHERE user_id = ?");
-            return $stmt->execute([$fullname, $email, $description, $location, $user_id]);
-        } catch (PDOException $e) {
-            return false;
-        }
+    public function updateUser($user_id, $fullname, $email, $description, $location, $disability) {
+        $sql = "UPDATE users 
+                SET fullname = ?, email = ?, description = ?, location = ?, disability = ?
+                WHERE user_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$fullname, $email, $description, $location, $disability, $user_id]);
     }
+    
     
     
 }

@@ -23,7 +23,7 @@ if (!empty($_POST['webcam_image'])) {
     $filePath = $uploadDir . $filename;
 
     file_put_contents($filePath, $data);
-    $imgPath = 'assets/uploads/' . $filename;
+    $imgPath = '../assets/uploads/' . $filename;
 
 // Handle file upload
 } elseif (!empty($_FILES['profile_photo']['tmp_name'])) {
@@ -32,7 +32,7 @@ if (!empty($_POST['webcam_image'])) {
     $filePath = $uploadDir . $filename;
 
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
-        $imgPath = 'assets/uploads/' . $filename;
+        $imgPath = '../assets/uploads/' . $filename;
     } else {
         die("Failed to upload image.");
     }

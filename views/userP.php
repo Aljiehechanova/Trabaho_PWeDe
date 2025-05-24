@@ -58,7 +58,8 @@ if (!$user) {
         <p><strong>Name:</strong> <?= htmlspecialchars($user['fullname']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
         <p><strong>Description:</strong><?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
-        <p><strong>location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
+        <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
+        <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
 
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
             Edit Profile
@@ -95,6 +96,11 @@ if (!$user) {
         <div class="mb-3">
           <label for="location" class="form-label">Location</label>
           <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['location'] ?? '') ?>" placeholder="e.g. Manila, Philippines">
+        </div>
+      </div>
+      <div class="mb-3">
+          <label for="disability" class="form-label">Disability</label>
+          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['disability'] ?? '') ?>" placeholder="e.g. Manila, Philippines">
         </div>
       </div>
       

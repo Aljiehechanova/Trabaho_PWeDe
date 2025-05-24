@@ -28,6 +28,7 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Job Matching - Trabaho PWeDe</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/job_matching.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -53,33 +54,36 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </nav>
-<div class="sidebar">
-    <ul>
-        <li><a href="userPE.php">Profile Enhancer</a></li>
-        <li class="active"><a href="JM.php">Job Matching</a></li>
-        <li><a href="userD.php">Analytic Dashboard</a></li>
-        <li><a href="userM.php">Messages</a></li>
-    </ul>
-</div>
+<div class="d-flex" style="margin-top: 70px;">
+  <div class="sidebar">
+      <ul>
+          <li><a href="userPE.php">Profile Enhancer</a></li>
+          <li class="active"><a href="JM.php">Job Matching</a></li>
+          <li><a href="userD.php">Analytic Dashboard</a></li>
+          <li><a href="userM.php">Messages</a></li>
+      </ul>
+  </div>
+  <div class="job-matching-wrapper"></div>
+    <div class="main-content">
+        <h1>Recommended Jobs for You</h1>
 
-<div class="main-content">
-    <h1>Recommended Jobs for You</h1>
-
-    <div class="job-list">
-        <?php if (!empty($jobs)) : ?>
-            <?php foreach ($jobs as $job) : ?>
-                <div class="job-card">
-                    <h3><?php echo htmlspecialchars($job['jobpost_title'] ?? 'N/A'); ?></h3>
-                    <p><strong>Disability Requirement:</strong> <?php echo htmlspecialchars($job['disability_requirement'] ?? 'N/A'); ?></p>
-                    <p><strong>Skills Requirement:</strong> <?php echo htmlspecialchars($job['skills_requirement'] ?? 'N/A'); ?></p>
-                    <a href="job_details.php?jobpost_id=<?php echo $job['jobpost_id'] ?? '#'; ?>" 
-                       class="btn btn-primary">View Details</a>
-                </div>
-            <?php endforeach; ?>
-        <?php else : ?>
-            <p>No recommended jobs found for your profile.</p>
-        <?php endif; ?>
+        <div class="job-list">
+            <?php if (!empty($jobs)) : ?>
+                <?php foreach ($jobs as $job) : ?>
+                    <div class="job-card">
+                        <h3><?php echo htmlspecialchars($job['jobpost_title'] ?? 'N/A'); ?></h3>
+                        <p><strong>Disability Requirement:</strong> <?php echo htmlspecialchars($job['disability_requirement'] ?? 'N/A'); ?></p>
+                        <p><strong>Skills Requirement:</strong> <?php echo htmlspecialchars($job['skills_requirement'] ?? 'N/A'); ?></p>
+                        <a href="job_details.php?jobpost_id=<?php echo $job['jobpost_id'] ?? '#'; ?>" 
+                          class="btn btn-primary">View Details</a>
+                    </div>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p>No recommended jobs found for your profile.</p>
+            <?php endif; ?>
+        </div>
     </div>
+  </div>
 </div>
 
 </body>

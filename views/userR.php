@@ -74,16 +74,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
 
                     <div class="mb-3">
-                        <label>Type of Disability</label>
-                        <select name="disability" class="form-control" required>
-                            <option value="" disabled selected>Select your disability</option>
-                            <option value="Visual Impairment">Visual Impairment</option>
-                            <option value="Hearing Impairment">Hearing Impairment</option>
-                            <option value="Physical Disability">Physical Disability</option>
-                            <option value="Speech Impairment">Speech Impairment</option>
+                        <label for="disability" class="form-label">Disability</label>
+                        <select class="form-select" id="disability" name="disability" required>
+                            <option value="" disabled <?= empty($user['disability']) ? 'selected' : '' ?>>Select Disability</option>
+                            <option value="Visual Impairment" <?= ($user['disability'] === 'Visual Impairment') ? 'selected' : '' ?>>Visual Impairment</option>
+                            <option value="Hearing Impairment" <?= ($user['disability'] === 'Hearing Impairment') ? 'selected' : '' ?>>Hearing Impairment</option>
+                            <option value="Physical Impairment" <?= ($user['disability'] === 'Physical Impairment') ? 'selected' : '' ?>>Physical Impairment</option>
+                            <option value="Speech Impairment" <?= ($user['disability'] === 'Speech Impairment') ? 'selected' : '' ?>>Speech Impairment</option>
                         </select>
-                    </div>
-
+                        </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="agreement" name="agreement">
                         <label class="form-check-label" for="agreement">
