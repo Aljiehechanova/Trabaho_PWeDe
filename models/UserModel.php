@@ -11,7 +11,7 @@ class UserModel
     // Check if email exists in the users table
     public function emailExists($email)
     {
-        $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt = $this->conn->prepare("SELECT user_id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
@@ -76,7 +76,7 @@ class UserModel
     }
     public function updateProfile($user_id, $fullname, $email) {
         try {
-            $stmt = $this->conn->prepare("UPDATE users SET fullname = ?, email = ? WHERE id = ?");
+            $stmt = $this->conn->prepare("UPDATE users SET fullname = ?, email = ? WHERE user_id = ?");
             return $stmt->execute([$fullname, $email, $user_id]);
         } catch (PDOException $e) {
             return false;
