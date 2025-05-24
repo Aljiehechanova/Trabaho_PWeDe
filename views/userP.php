@@ -29,10 +29,10 @@ if (!$user) {
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
-      <span class="fw-bold">TrabahoPWeDe</span>
-    </a>
+  <a class="navbar-brand d-flex align-items-center" href="UserD.php">
+    <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
+    <span class="fw-bold">TrabahoPWeDe</span>
+  </a>
     <div class="ms-auto">
       <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,7 +42,7 @@ if (!$user) {
           <li><a class="dropdown-item" href="#">Edit Profile</a></li>
           <li><a class="dropdown-item" href="#">Change Password</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="../logout.php">Logout</a></li>
+          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -57,8 +57,8 @@ if (!$user) {
         <h2>User Profile</h2>
         <p><strong>Name:</strong> <?= htmlspecialchars($user['fullname']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-        <p><strong>Description:</strong> Passionate about smart technologies and web development.</p>
-        <p><strong>Location:</strong> Manila, Philippines</p>
+        <p><strong>Description:</strong><?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
+        <p><strong>location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
 
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
             Edit Profile
@@ -76,15 +76,28 @@ if (!$user) {
       </div>
       <div class="modal-body">
         <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        
         <div class="mb-3">
           <label for="fullname" class="form-label">Full Name</label>
           <input type="text" class="form-control" id="fullname" name="fullname" value="<?= htmlspecialchars($user['fullname']) ?>" required>
         </div>
+        
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
         </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="3" placeholder="Tell something about yourself..."><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['location'] ?? '') ?>" placeholder="e.g. Manila, Philippines">
+        </div>
       </div>
+      
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -92,6 +105,7 @@ if (!$user) {
     </form>
   </div>
 </div>
+
 
 <!-- Modal for Editing Profile Picture -->
 <div class="modal fade" id="editPhotoModal" tabindex="-1">

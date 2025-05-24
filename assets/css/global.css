@@ -1,90 +1,131 @@
-/* Global Reset */
+/* Box sizing reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #F5F5F5; /* Light gray for contrast */
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #f9f9f9;
 }
 
-/* Sidebar Styles */
+/* === NAVBAR (fixed at top) === */
+nav.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* === SIDEBAR === */
 .sidebar {
-    width: 260px;
-    background-color: #2C3E50; /* Dark blue for contrast */
-    color: white;
-    height: 100vh;
-    padding: 20px;
-    position: fixed;
-    text-align: center;
+  position: fixed;
+  top: 70px; /* Push below navbar */
+  left: 0;
+  bottom: 0;
+  width: 270px;
+  background-color: #2C3E50; /* Dark sidebar */
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 1px 0 5px rgba(0,0,0,0.1);
 }
 
-/* Logo Styling */
-.sidebar .logo img {
-    width: 80%;
-    max-width: 200px;
-    display: block;
-    margin: 0 auto 20px;
-}
 
-/* Sidebar Navigation List */
 .sidebar ul {
-    list-style: none !important; /* Ensures bullets show */
-    padding-left: 20px; /* Adds spacing */
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-/* Sidebar List Items */
 .sidebar ul li {
-    text-align: left;
-    padding: 10px 0;
-    font-size: 18px;
-    font-weight: bold;
+  text-align: left;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-/* Sidebar Links */
 .sidebar ul li a {
-    color: #FFD700; /* Gold text for readability */
-    text-decoration: none;
-    padding: 8px;
-    display: block;
-    transition: 0.3s ease-in-out;
+  color: #FFD700; /* Gold text */
+  text-decoration: none;
+  padding: 8px;
+  display: block;
+  transition: 0.3s ease-in-out;
 }
-.top-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background-color: #34495e;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .top-navbar button {
-    background-color: #ecf0f1;
-    color: #2c3e50;
-    border: none;
-    margin: 0 10px;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .top-navbar button:hover {
-    background-color: #bdc3c7;
-  }
-  
-  /* Adjust layout below navbar */
-  .sidebar {
-    margin-top: 50px; /* push sidebar below navbar */
-  }
-  
-  .main-content {
-    padding-top: 90px; /* prevent overlap with navbar */
-  }
-  
+
+.sidebar ul li.active a,
+.sidebar ul li a:hover {
+  background-color: #c2e0c6;
+  color: #2f5d34;
+  border-radius: 4px;
+}
+
+/* === MAIN CONTENT === */
+.layout-container {
+  margin-top: 70px; /* same as navbar height */
+  min-height: calc(100vh - 70px);
+}
+
+.main-content {
+  margin-left: 290px; /* 270px sidebar + spacing */
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 2px solid #c2e0c6;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-height: calc(100vh - 110px); /* full view minus navbar + spacing */
+}
+
+/* === Optional: Analytics Boxes === */
+.analytics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.analytics-box {
+  background-color: #fff;
+  border: 2px solid #c2e0c6;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.analytics-box h3 {
+  margin-bottom: 10px;
+}
+
+/* === Forms & Cards (if used) === */
+.message-form, .message-card {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.message-form input,
+.message-form textarea {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

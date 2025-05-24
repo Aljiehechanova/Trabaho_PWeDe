@@ -28,17 +28,32 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Job Matching - Trabaho PWeDe</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/job_matching.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="top-navbar">
-  <button onclick="location.href='userD.php'">User</button>
-  <button onclick="location.href='clientD.php'">Client</button>
-  <button onclick="location.href='addash.php'">Admin</button>
-</div>
-<div class="sidebar">
-    <div class="logo">
-        <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Trabaho PWeDe">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container-fluid">
+  <a class="navbar-brand d-flex align-items-center" href="UserD.php">
+    <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
+    <span class="fw-bold">TrabahoPWeDe</span>
+  </a>
+    <div class="ms-auto">
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          Settings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsMenu">
+          <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
+</nav>
+<div class="sidebar">
     <ul>
         <li><a href="userPE.php">Profile Enhancer</a></li>
         <li class="active"><a href="JM.php">Job Matching</a></li>
