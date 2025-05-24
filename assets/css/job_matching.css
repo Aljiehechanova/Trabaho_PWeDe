@@ -1,14 +1,14 @@
 /* Updated .main-content */
-.main-content {
-    background-color: #ffffff !important;
-    border: 2px solid #c2e0c6 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-    padding: 30px !important;
-    width: 100% !important;
-    max-width: 800px !important; /* or whatever max width you prefer */
-    margin: 0 auto 20px auto !important; /* Center horizontally */
-  }
+    .main-content {
+        background-color: #ffffff !important;
+        border: 2px solid #c2e0c6 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+        padding: 30px !important;
+        width: 100% !important;
+        max-width: 800px !important; /* or whatever max width you prefer */
+        margin: 0 auto 20px auto !important; /* Center horizontally */
+    }
   
   
 /* Adjust content wrapper for Job Matching page */
