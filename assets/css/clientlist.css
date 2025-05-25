@@ -85,3 +85,53 @@
 .match-btn:hover {
   background-color: #FFA726;
 }
+.applicant-card {
+  border: 2px solid #c2e0c6;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.applicant-card h4 {
+  margin: 0 0 10px;
+}
+
+.applicant-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.applicant-card form {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn-hire {
+  background-color: #1877f2; /* Facebook Blue */
+}
+
+.btn-hire:hover {
+  background-color: #155dc1;
+}
+
+.btn-hold {
+  background-color: #f0ad4e; /* Bootstrap Warning */
+}
+
+.btn-hold:hover {
+  background-color: #ec971f;
+}

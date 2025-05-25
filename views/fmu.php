@@ -38,7 +38,8 @@ try {
             echo "<form method='POST' action='hire_user.php'>";
             echo "<input type='hidden' name='user_id' value='" . $user['user_id'] . "'>";
             echo "<input type='hidden' name='job_id' value='" . $jobId . "'>";
-            echo "<button type='submit'>Hire</button>";
+            echo "<button type='submit' name='action' value='hire' class='btn-action btn-hire'>Hire</button>";
+            echo "<button type='submit' name='action' value='onhold' class='btn-action btn-hold'>On Hold</button>";
             echo "</form>";
             echo "</div>";
         }
