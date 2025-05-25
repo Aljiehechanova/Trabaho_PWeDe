@@ -1,66 +1,133 @@
 <?php
+session_start();
 require_once '../config/db_connection.php';
 
-// Fetch job stats
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$client_id = $_SESSION['user_id'];
+
+// Fetch client details
 try {
-    // Total jobs
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total_jobs FROM jobpost");
-    $stmt->execute();
-    $total_jobs = $stmt->fetch(PDO::FETCH_ASSOC)['total_jobs'];
+    $stmt = $conn->prepare("SELECT fullname, img FROM users WHERE user_id = ?");
+    $stmt->execute([$client_id]);
+    $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Number of unique disability types
-    $stmt = $conn->prepare("SELECT COUNT(DISTINCT disability_requirement) AS disability_count FROM jobpost");
-    $stmt->execute();
-    $disability_count = $stmt->fetch(PDO::FETCH_ASSOC)['disability_count'];
-
-    // Most common disability
-    $stmt = $conn->prepare("
-        SELECT disability_requirement, COUNT(*) as count
-        FROM jobpost
-        GROUP BY disability_requirement
-        ORDER BY count DESC
-        LIMIT 1
-    ");
-    $stmt->execute();
-    $most_common_disability = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$client) {
+        die("Client not found.");
+    }
 } catch (PDOException $e) {
-    die("Database error: " . $e->getMessage());
+    die("Client fetch error: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/dashboardstyle.css">
-    <link rel="stylesheet" href="../assets/css/global.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Client Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/dashboardstyle.css">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/chart.js"></script>
 </head>
 <body>
-<div class="sidebar">
-        <ul>
-            <li><a href="clientL.php">View Job List</a></li>
-            <li><a href="posting.php">Posting</a></li>
-            <li class="active"><a href="clientD.php">Analytic Dashboard</a></li>
-            <li><a href="clientM.php">Messages</a></li>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="clientD.php">
+      <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
+      <span class="fw-bold">TrabahoPWeDe</span>
+    </a>
+    <div class="ms-auto d-flex align-items-center">
+      <a href="#" class="d-flex align-items-center text-decoration-none me-3">
+        <img src="<?= htmlspecialchars($client['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
+        <span class="fw-semibold text-dark"><?= htmlspecialchars($client['fullname']) ?></span>
+      </a>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Settings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
         </ul>
+      </div>
     </div>
-    <div class="main-content">
-        <h1>Client Analytic Dashboard</h1>
-        <div class="analytics">
-            <div class="analytics-box">
-                <h3>Total Jobs Available</h3>
-                <p><?= $total_jobs ?></p>
-            </div>
-            <div class="analytics-box">
-                <h3>Number of Disability Types</h3>
-                <p><?= $disability_count ?></p>
-            </div>
-            <div class="analytics-box">
-                <h3>Most Common Disability in Jobs</h3>
-                <p><?= htmlspecialchars($most_common_disability['disability_requirement'] ?? 'N/A') ?></p>
-            </div>
+  </div>
+</nav>
+
+<!-- Layout Wrapper -->
+<div class="layout-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <ul>
+      <li><a href="clientL.php">View Job List</a></li>
+      <li><a href="posting.php">Posting</a></li>
+      <li class="active"><a href="clientD.php">Analytic Dashboard</a></li>
+      <li><a href="clientM.php">Inbox</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Metrics Section -->
+    <div class="section-box">
+      <div class="row text-center">
+        <div class="col-md-6">
+          <div class="dashboard-card">
+            <h4>Total Jobs Posted</h4>
+            <p id="totalJobsPosted" class="fs-3 fw-bold text-primary">Loading...</p>
+          </div>
         </div>
-    </div> 
-</body>
-</html>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <div class="row text-center">
+        <div class="col-md-6">
+          <h4 class="text-center mb-3">Hiring Pipeline Summary</h4>
+          <table class="table table-bordered text-center">
+            <thead class="table-light">
+              <tr>
+                <th>Applicants</th>
+                <th>Interviews</th>
+                <th>Hired</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="totalApplicants">Loading...</td>
+                <td id="totalInterviews">Loading...</td>
+                <td id="totalHired">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie Chart Section -->
+    <div class="section-box">
+      <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
+        <canvas id="applicantPieChart" height="300"></canvas>
+      </div>
+    </div>
+
+    <!-- Bar Chart Section -->
+    <div class="section-box">
+      <h5 class="text-center">Applicants by Disability Type (Bar Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
+        <canvas id="applicantBarChart" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

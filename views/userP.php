@@ -29,10 +29,10 @@ if (!$user) {
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
-  <a class="navbar-brand d-flex align-items-center" href="UserD.php">
-    <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
-    <span class="fw-bold">TrabahoPWeDe</span>
-  </a>
+    <a class="navbar-brand d-flex align-items-center" href="UserD.php">
+      <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
+      <span class="fw-bold">TrabahoPWeDe</span>
+    </a>
     <div class="ms-auto">
       <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,26 +48,68 @@ if (!$user) {
     </div>
   </div>
 </nav>
+
 <div class="container mt-5">
     <div class="profile-card text-center">
-        <!-- Clickable Profile Image -->
-        <img src="<?= htmlspecialchars($user['img'])?>" alt="Profile Picture" onerror="this.onerror=null;this.src='../assets/images/alterprofile.png';" class="profile-img" data-bs-toggle="modal" data-bs-target="#editPhotoModal">
-
+        <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile Picture" onerror="this.onerror=null;this.src='../assets/images/alterprofile.png';" class="profile-img" data-bs-toggle="modal" data-bs-target="#editPhotoModal">
 
         <h2>User Profile</h2>
         <p><strong>Name:</strong> <?= htmlspecialchars($user['fullname']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-        <p><strong>Description:</strong><?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
+        <p><strong>Description:</strong> <?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
         <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
 
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
             Edit Profile
         </button>
-    </div>
-</div>
 
-<!-- Modal for Editing Profile Info -->
+        <?php if (!empty($user['resume'])): ?>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#resumeModal">
+                View Resume
+            </button>
+        <?php endif; ?>
+    </div>
+</div> <!-- End of container -->
+
+<!-- View Resume Modal (moved outside the container) -->
+<!-- Resume Modal -->
+<?php if (!empty($user['resume'])): ?>
+    <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#resumeModal">
+        View Resume
+    </button>
+
+    <!-- Resume Modal -->
+    <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resumeModalLabel">View Resume</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <?php
+              $resumePath = "../" . htmlspecialchars($user['resume']);
+              $ext = strtolower(pathinfo($resumePath, PATHINFO_EXTENSION));
+              if ($ext === 'pdf') {
+                  echo "<iframe id='resumeFrame' src='$resumePath' width='100%' height='600px' style='border: none;'></iframe>";
+              } else {
+                  echo "<p>Resume format not supported for preview. <a href='$resumePath' download>Download it here</a>.</p>";
+              }
+            ?>
+          </div>
+          <div class="modal-footer">
+            <a href="<?= $resumePath ?>" class="btn btn-success" download>Download</a>
+            <button type="button" class="btn btn-primary" onclick="printResume()">Print</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<?php endif; ?>
+
+
+<!-- Edit Profile Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <form action="update_profile.php" method="POST" class="modal-content">
@@ -90,17 +132,17 @@ if (!$user) {
 
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
-          <textarea class="form-control" id="description" name="description" rows="3" placeholder="Tell something about yourself..."><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
+          <textarea class="form-control" id="description" name="description" rows="3"><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
         </div>
 
         <div class="mb-3">
           <label for="location" class="form-label">Location</label>
-          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['location'] ?? '') ?>" placeholder="e.g. Manila, Philippines">
+          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['location'] ?? '') ?>">
         </div>
-      </div>
-      <div class="mb-3">
+
+        <div class="mb-3">
           <label for="disability" class="form-label">Disability</label>
-          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['disability'] ?? '') ?>" placeholder="e.g. Manila, Philippines">
+          <input type="text" class="form-control" id="disability" name="disability" value="<?= htmlspecialchars($user['disability'] ?? '') ?>">
         </div>
       </div>
       
@@ -112,8 +154,7 @@ if (!$user) {
   </div>
 </div>
 
-
-<!-- Modal for Editing Profile Picture -->
+<!-- Edit Profile Photo Modal -->
 <div class="modal fade" id="editPhotoModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <form action="upload_photo.php" method="POST" enctype="multipart/form-data" class="modal-content">
@@ -161,7 +202,6 @@ function capture() {
     document.getElementById('webcam_image').value = dataURL;
 }
 
-// Enable webcam
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('video');
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -175,6 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 });
+
+function printResume() {
+    const iframe = document.querySelector('#resumeModal iframe');
+    if (iframe) {
+        iframe.focus();
+        iframe.contentWindow.print();
+    } else {
+        alert("Resume is not in a printable format.");
+    }
+}
 </script>
 
 </body>

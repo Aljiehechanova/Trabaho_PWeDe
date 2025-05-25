@@ -1,75 +1,68 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("../charts/chart-data.php")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          console.error(data.error);
-          return;
+document.addEventListener("DOMContentLoaded", function () {
+  fetch('../api/chart-data.php')
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.labels || !data.counts) {
+        console.error('Invalid data:', data);
+        return;
+      }
+
+      // Update text stats
+      document.getElementById('totalJobs').textContent = data.totalJobs ?? '0';
+      document.getElementById('jobsAvailable').textContent = data.pipeline?.available ?? '0';
+      document.getElementById('jobsCompleted').textContent = data.pipeline?.completed ?? '0';
+      document.getElementById('jobsOffered').textContent = data.pipeline?.offered ?? '0';
+
+      // Pie chart
+      const ctxPie = document.getElementById('disabilityPie').getContext('2d');
+      new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Disability Requirements',
+            data: data.counts,
+            backgroundColor: ['#007bff', '#ffc107', '#dc3545', '#28a745', '#6610f2'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
         }
-  
-        document.getElementById("totalJobs").textContent = data.totalJobs;
-        document.getElementById("mostCommonDisability").textContent = data.mostCommon;
-  
-        const pieCtx = document.getElementById("disabilityPie").getContext("2d");
-        const labels = Object.keys(data.disabilityCounts);
-        const values = Object.values(data.disabilityCounts);
-  
-        new Chart(pieCtx, {
-          type: "pie",
-          data: {
-            labels: labels,
-            datasets: [{
-              data: values,
-              backgroundColor: [
-                "#4B61D1", "#F07C46", "#9D4EDD",
-                "#00B8A9", "#F76C6C", "#6C5B7B"
-              ],
-              borderColor: "#fff",
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: "bottom" },
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    const value = context.raw;
-                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                    const percent = ((value / total) * 100).toFixed(1);
-                    return `${context.label}: ${value} (${percent}%)`;
-                  }
-                }
-              }
-            }
-          }
-        });
-  
-        const barCtx = document.getElementById("disabilityBar").getContext("2d");
-  
-        new Chart(barCtx, {
-          type: "bar",
-          data: {
-            labels: labels,
-            datasets: [{
-              label: "Jobs",
-              data: values,
-              backgroundColor: "#36A2EB"
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true
-              }
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.error("Error fetching chart data:", err);
       });
-  });
-  
+
+      // Bar chart
+      const ctxBar = document.getElementById('disabilityBar').getContext('2d');
+      new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Job Posts by Disability',
+            data: data.counts,
+            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+            borderColor: '#007bff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Job Count' }
+            },
+            x: {
+              title: { display: true, text: 'Disability Type' }
+            }
+          }
+        }
+      });
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+    });
+});

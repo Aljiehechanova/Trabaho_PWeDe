@@ -45,10 +45,10 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>User Chatbox</title>
     <link rel="stylesheet" href="../assets/css/defaultstyle.css">
     <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/dashboardstyle.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
@@ -105,54 +105,55 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </nav>
-<div class="sidebar">
-    <ul>
-        <li><a href="userPE.php">Profile Enhancer</a></li>
-        <li><a href="JM.php">Job Matching</a></li>
-        <li><a href="userD.php">Analytic Dashboard</a></li>
-        <li class="active"><a href="userM.php">Messages</a></li>
-    </ul>
-</div>
-<div class="main-content">
-    <h1>Inbox</h1>
+<div class="layout-container">
+  <div class="sidebar">
+      <ul>
+          <li><a href="userPE.php">Profile Enhancer</a></li>
+          <li><a href="JM.php">Job Matching</a></li>
+          <li><a href="userD.php">Analytic Dashboard</a></li>
+          <li class="active"><a href="userM.php">Inbox</a></li>
+      </ul>
+  </div>
+  <div class="main-content">
+      <h1>Inbox</h1>
 
-    <button class="open-modal-btn" onclick="document.getElementById('sendModal').style.display='block'">Compose Message</button>
+      <button class="open-modal-btn" onclick="document.getElementById('sendModal').style.display='block'">Compose Message</button>
 
-    <?php if (!empty($messages)): ?>
-      <?php foreach ($messages as $msg): ?>
-        <div class="message-card">
-          <p><strong>From:</strong> <?= htmlspecialchars($msg['sender_email']) ?></p>
-          <p><strong>Subject:</strong> <?= htmlspecialchars($msg['subject']) ?></p>
-          <p><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>No messages found.</p>
-    <?php endif; ?>
-</div>
+      <?php if (!empty($messages)): ?>
+        <?php foreach ($messages as $msg): ?>
+          <div class="message-card">
+            <p><strong>From:</strong> <?= htmlspecialchars($msg['sender_email']) ?></p>
+            <p><strong>Subject:</strong> <?= htmlspecialchars($msg['subject']) ?></p>
+            <p><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>No messages found.</p>
+      <?php endif; ?>
+  </div>
 
-<!-- Modal -->
-<div id="sendModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="document.getElementById('sendModal').style.display='none'">&times;</span>
-    <h2>Send Message</h2>
-    <form action="send_message.php" method="POST">
-      <label for="receiver_email">Send To (Email):</label>
-      <input type="email" name="receiver_email" required>
+  <!-- Modal -->
+  <div id="sendModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('sendModal').style.display='none'">&times;</span>
+      <h2>Send Message</h2>
+      <form action="send_message.php" method="POST">
+        <label for="receiver_email">Send To (Email):</label>
+        <input type="email" name="receiver_email" required>
 
-      <label for="subject">Subject:</label>
-      <input type="text" name="subject">
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject">
 
-      <label for="message">Message:</label>
-      <textarea name="message" rows="5" required></textarea>
+        <label for="message">Message:</label>
+        <textarea name="message" rows="5" required></textarea>
 
-      <input type="hidden" name="sender_email" value="<?= htmlspecialchars($loggedInEmail) ?>">
+        <input type="hidden" name="sender_email" value="<?= htmlspecialchars($loggedInEmail) ?>">
 
-      <button type="submit">Send Message</button>
-    </form>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
   </div>
 </div>
-
 <script>
   // Close modal on outside click
   window.onclick = function(event) {

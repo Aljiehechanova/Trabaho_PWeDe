@@ -1,89 +1,63 @@
-/* Updated .main-content */
-    .main-content {
-        background-color: #ffffff !important;
-        border: 2px solid #c2e0c6 !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-        padding: 30px !important;
-        width: 100% !important;
-        max-width: 800px !important; /* or whatever max width you prefer */
-        margin: 0 auto 20px auto !important; /* Center horizontally */
-    }
+/* --- Global Layout Fixes --- */
+body.modal-open {
+    overflow: hidden; /* Prevent background scroll */
+  }
   
-  
-/* Adjust content wrapper for Job Matching page */
-.job-matching-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 120px 20px 60px;  /* ✅ More top space */
+  /* --- Main Content Wrapper for Job Matching --- */
+  .job-matching-wrapper {
+    margin-left: 270px; /* leave space for sidebar */
+    padding: 90px 20px 60px 20px; /* top, right, bottom, left */
+    width: calc(100% - 270px); /* fill remaining width */
     min-height: 100vh;
     background-color: #2C3E50;
     box-sizing: border-box;
-}
-
-/* Centered Main Content Card */
-.job-matching-wrapper .main-content {
-    background-color: #ffffff;
-    border: 2px solid #c2e0c6;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    padding: 40px;
-    width: 100%;
-    max-width: 850px;
-    margin: 0 auto;
-}
-
-  
-
-/* Header Styling */
-.header {
+    overflow-x: hidden;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: calc(100% - 270px);
-    top: 0;
-    left: 270px;
-    z-index: 10;
-}
-
-.search-bar {
-    padding: 8px 15px;
-    border: 2px solid #c2e0c6;
-    border-radius: 20px;
-    width: 250px;
-}
-
-/* Job List Styling */
-.job-list {
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  /* --- Main Job Content Card --- */
+  .main-content {
+    background-color: #ffffff !important;
+    border: 2px solid #c2e0c6 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    padding: 30px !important;
+    width: 100% !important; /* fill entire wrapper */
+    margin: 0 auto 20px auto !important;
+    box-sizing: border-box;
+    max-width: 800px !important;
+  }
+  
+  /* --- Job List Styling --- */
+  .job-list {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-height: calc(100vh - 120px); /* Adjust for header height */
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
     padding-top: 20px;
-}
-
-.job-card {
+  }
+  
+  .job-card {
     background-color: #fff;
     border: 2px solid #c2e0c6;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 60%;              /* Controls card width for balance */
-    margin-bottom: 15px;     /* Space between cards */
+    width: 60%;
+    margin-bottom: 15px;
     padding: 15px;
-}
-
-.job-card:hover {
+    transition: transform 0.2s ease;
+  }
+  
+  .job-card:hover {
     transform: scale(1.03);
-}
-
-.btn.btn-primary {
+  }
+  
+  /* --- Buttons --- */
+  .btn.btn-primary {
     background-color: #FFD54F;
     color: #000;
     text-decoration: none;
@@ -91,17 +65,76 @@
     border-radius: 5px;
     display: inline-block;
     margin-top: 10px;
-}
-
-.btn.btn-primary:hover {
+    cursor: pointer;
+  }
+  
+  .btn.btn-primary:hover {
     background-color: #FFA726;
-}
-@media (max-width: 768px) {
+  }
+  
+  /* --- Modal Overlay --- */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  /* --- Modal Content Box --- */
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    border: 2px solid #c2e0c6;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    z-index: 10000;
+  }
+  
+  /* --- Modal Close Button --- */
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+  }
+  
+  .modal-close:hover {
+    color: #333;
+  }
+  
+  /* --- Responsive Fixes --- */
+  @media (max-width: 768px) {
     .job-matching-wrapper {
-        padding: 100px 10px 40px;
+      margin-left: 0;
+      padding: 100px 10px 40px 10px;
+      width: 100%;
     }
-
-    .job-matching-wrapper .main-content {
-        padding: 25px;
+  
+    .main-content {
+      padding: 25px;
+      max-width: 100% !important;
+      margin-left: 0 !important;
     }
-}
+  
+    .job-card {
+      width: 90%;
+    }
+  
+    .modal-content {
+      width: 95%;
+      margin: 20% auto;
+    }
+  }
+  

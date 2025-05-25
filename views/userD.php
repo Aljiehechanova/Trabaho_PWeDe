@@ -73,11 +73,10 @@ try {
       <li><a href="userPE.php">Profile Enhancer</a></li>
       <li><a href="JM.php">Job Matching</a></li>
       <li class="active"><a href="userD.php">Analytic Dashboard</a></li>
-      <li><a href="userM.php">Messages</a></li>
+      <li><a href="userM.php">Inbox</a></li>
     </ul>
   </div>
 
-  <!-- Main Content -->
   <!-- Main Content -->
 <div class="main-content">
 
@@ -90,10 +89,12 @@ try {
         <p id="totalJobs" class="fs-3 fw-bold text-primary">Loading...</p>
       </div>
     </div>
+  </div>
 </div>
 
 <div class="section-box">
-  <div class="col-md-6">
+  <div class="row text-center">
+    <div class="col-md-6">
       <h4 class="text-center mb-3">Pipeline Hiring Summary</h4>
       <table class="table table-bordered text-center">
         <thead class="table-light">
@@ -112,7 +113,9 @@ try {
         </tbody>
       </table>
     </div>
+  </div>
 </div>
+
 <!-- Pie Chart Section -->
 <div class="section-box">
   <h5 class="text-center">Disability Types Distribution (Pie Chart)</h5>
@@ -129,80 +132,7 @@ try {
   </div>
 </div>
 
-</div> <!-- End main-content -->
-
-
-<!-- Chart Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    fetch("charts/chart-data.php")
-      .then((res) => res.json())
-      .then((data) => {
-        document.getElementById("totalJobs").textContent = data.totalJobs;
-        document.getElementById("mostCommonDisability").textContent = data.mostCommon;
-
-        const pieCtx = document.getElementById("disabilityPie").getContext("2d");
-        const pieLabels = Object.keys(data.disabilityCounts);
-        const pieData = Object.values(data.disabilityCounts);
-
-        new Chart(pieCtx, {
-          type: "pie",
-          data: {
-            labels: pieLabels,
-            datasets: [{
-              data: pieData,
-              backgroundColor: [
-                "#4B61D1", "#F07C46", "#9D4EDD",
-                "#00B8A9", "#F76C6C", "#6C5B7B"
-              ],
-              borderColor: "#fff",
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: "bottom" },
-              tooltip: {
-                callbacks: {
-                  label: function(context) {
-                    const value = context.raw;
-                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                    const percent = ((value / total) * 100).toFixed(1);
-                    return `${context.label}: ${value} (${percent}%)`;
-                  }
-                }
-              }
-            }
-          }
-        });
-
-        const barCtx = document.getElementById("disabilityBar").getContext("2d");
-        new Chart(barCtx, {
-          type: "bar",
-          data: {
-            labels: pieLabels,
-            datasets: [{
-              label: "Jobs",
-              data: pieData,
-              backgroundColor: "#36A2EB"
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true
-              }
-            }
-          }
-        });
-      })
-      .catch((err) => {
-        console.error("Chart data fetch error:", err);
-      });
-  });
-</script>
+</div>
 
 </body>
 </html>

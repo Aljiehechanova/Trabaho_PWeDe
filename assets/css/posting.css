@@ -214,3 +214,16 @@ h1 {
         width: 95%;
     }
 }
+/* Fix overlap due to fixed navbar */
+.content-area {
+    padding-top: 100px; /* Adjust based on your actual navbar height */
+    flex-grow: 1;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+
+/* Optional spacing fix for anchor scrolling */
+html {
+    scroll-padding-top: 100px;
+}

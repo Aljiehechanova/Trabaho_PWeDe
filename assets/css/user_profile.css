@@ -93,3 +93,31 @@ p {
     max-width: 500px;
     margin: 0 auto;
 }
+/* View Resume Button */
+.btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+/* Print Button inside Resume Modal */
+.modal-footer .btn-success {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+.modal-footer .btn-success:hover {
+    background-color: #218838;
+}
