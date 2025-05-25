@@ -17,9 +17,6 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/global.css">
 </head>
     <div class="sidebar">
-        <div class="logo">
-            <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Trabaho PWeDe">
-        </div>
         <ul>
             <li><a href="clientL.php">View Job List</a></li>
             <li><a href="posting.php">Posting</a></li>

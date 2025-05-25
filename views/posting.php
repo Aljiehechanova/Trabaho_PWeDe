@@ -14,9 +14,6 @@
   <button onclick="location.href='addash.php'">Admin</button>
 </div>
     <div class="sidebar">
-        <div class="logo">
-            <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Trabaho PWeDe">
-        </div>
         <ul>
             <li><a href="clientL.php">View Job List</a></li>
             <li class="active"><a href="posting.php">Posting</a></li>
