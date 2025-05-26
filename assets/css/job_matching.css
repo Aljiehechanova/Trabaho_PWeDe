@@ -6,10 +6,8 @@ body.modal-open {
   /* --- Main Content Wrapper for Job Matching --- */
   .job-matching-wrapper {
     margin-left: 270px; /* leave space for sidebar */
-    padding: 90px 20px 60px 20px; /* top, right, bottom, left */
     width: calc(100% - 270px); /* fill remaining width */
     min-height: 100vh;
-    background-color: #2C3E50;
     box-sizing: border-box;
     overflow-x: hidden;
     display: flex;

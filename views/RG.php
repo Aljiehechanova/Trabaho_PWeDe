@@ -6,8 +6,34 @@
     <title>Resume Builder</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease;
+        }
+        .back-button i {
+            margin-right: 5px;
+        }
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
+    <a href="userPE.php" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
     <div class="container">
         <h1><i class="fas fa-file-alt"></i> Resume Builder</h1>
         
@@ -203,7 +229,6 @@
         function addSkill() {
             const skillInput = document.getElementById('skillInput');
             const skill = skillInput.value.trim();
-            
             if (skill && !skills.includes(skill)) {
                 skills.push(skill);
                 updateSkillsList();
@@ -219,7 +244,6 @@
         function updateSkillsList() {
             const skillsList = document.getElementById('skillsList');
             const skillsInput = document.getElementById('skillsInput');
-            
             skillsList.innerHTML = skills.map(skill => `
                 <span class="skill">
                     ${skill}
@@ -228,11 +252,9 @@
                     </button>
                 </span>
             `).join('');
-            
             skillsInput.value = skills.join(',');
         }
 
-        // Add skill when pressing Enter
         document.getElementById('skillInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -240,7 +262,6 @@
             }
         });
 
-        // Form validation
         document.getElementById('resumeForm').addEventListener('submit', function(e) {
             if (skills.length === 0) {
                 e.preventDefault();
@@ -249,4 +270,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

@@ -1,6 +1,6 @@
 <?php
 include '../config/db_connection.php';
-include '../models/UserModel.php';
+require_once '../models/UserModel.php';
 
 class UserController
 {

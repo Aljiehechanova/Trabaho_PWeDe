@@ -33,10 +33,9 @@ nav.navbar {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 50px 20px 60px;  /* Top padding below navbar */
+  padding: 70px 20px 60px;  /* Top padding below navbar */
   min-height: 100vh;
   box-sizing: border-box;
-  background-color: #2C3E50;
 }
 
 /* === Main content centered === */

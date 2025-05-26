@@ -45,7 +45,6 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>User Chatbox</title>
     <link rel="stylesheet" href="../assets/css/defaultstyle.css">
     <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/dashboardstyle.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

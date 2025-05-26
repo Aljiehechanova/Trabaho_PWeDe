@@ -4,6 +4,11 @@
 *::after {
   box-sizing: border-box;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
 body {
   margin: 0;
@@ -35,7 +40,7 @@ nav.navbar {
   left: 0;
   bottom: 0;
   width: 270px;
-  background-color: #2C3E50; /* Dark sidebar */
+  background-color: #D6EAF8; 
   color: white;
   padding: 20px;
   overflow-y: auto;
@@ -57,7 +62,7 @@ nav.navbar {
 }
 
 .sidebar ul li a {
-  color: #FFD700; /* Gold text */
+  color: #1B4F72; /* Gold text */
   text-decoration: none;
   padding: 8px;
   display: block;

@@ -6,84 +6,24 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 try {
-    // === Donut Chart: Users per disability type with workshop participation ===
-    $stmt = $conn->query("
-        SELECT disability, COUNT(*) AS user_count
-        FROM users
-        WHERE disability IS NOT NULL 
-        AND disability != ''
-        AND with_workshop = 'yes'
-        GROUP BY disability
-    ");
-
-
-    $disabilityLabels = [];
-    $disabilityCounts = [];
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $disabilityLabels[] = $row['disability'];
-        $disabilityCounts[] = (int)$row['user_count'];
-    }
-
     $clientDisabilityLabels = [];
     $clientDisabilityCounts = [];
-    
+
     $clientStmt = $conn->query("
         SELECT disability, COUNT(*) AS count
         FROM users
         WHERE disability IS NOT NULL AND disability != ''
         GROUP BY disability
     ");
-    
     while ($row = $clientStmt->fetch(PDO::FETCH_ASSOC)) {
         $clientDisabilityLabels[] = $row['disability'];
         $clientDisabilityCounts[] = (int)$row['count'];
     }
-    // === Bar Chart: Workshop activity per month (based on entry_date) ===
-    $monthlyLabels = [];
-    $monthlyCounts = [];
 
-    $monthMap = [
-        1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
-        5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
-        9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
-    ];
-
-    $monthQuery = $conn->query("
-        SELECT MONTH(entry_date) as month, COUNT(*) as total
-        FROM activitylog
-        WHERE YEAR(entry_date) = YEAR(CURRENT_DATE())
-        GROUP BY MONTH(entry_date)
-        ORDER BY MONTH(entry_date)
-    ");
-
-    $year = date('Y');
-
-    $insertStmt = $conn->prepare("
-        INSERT INTO monthly_activity_summary (year, month, month_name, total_entries)
-        VALUES (:year, :month, :month_name, :total_entries)
-        ON DUPLICATE KEY UPDATE total_entries = :total_entries
-    ");
-
-    while ($row = $monthQuery->fetch(PDO::FETCH_ASSOC)) {
-        $monthNum = (int)$row['month'];
-        $monthlyLabels[] = $monthMap[$monthNum];
-        $monthlyCounts[] = (int)$row['total'];
-
-        $insertStmt->execute([
-            ':year' => $year,
-            ':month' => $monthNum,
-            ':month_name' => $monthMap[$monthNum],
-            ':total_entries' => (int)$row['total']
-        ]);
-    }
-
-    // === Hiring pipeline counts ===
     $available = $conn->query("SELECT COUNT(*) FROM activitylog WHERE available = 1")->fetchColumn();
     $offered   = $conn->query("SELECT COUNT(*) FROM activitylog WHERE offered = 1")->fetchColumn();
     $completed = $conn->query("SELECT COUNT(*) FROM activitylog WHERE complete = 1")->fetchColumn();
 
-    // === Most common job post ===
     $commonJobStmt = $conn->query("
         SELECT jobpost_title, COUNT(*) AS total
         FROM jobpost
@@ -94,17 +34,14 @@ try {
     $mostCommonJobRow = $commonJobStmt->fetch(PDO::FETCH_ASSOC);
     $mostCommonJob = $mostCommonJobRow['jobpost_title'] ?? 'N/A';
 
-    // === Total workshops ===
     $workshopTotal = $conn->query("SELECT COUNT(*) FROM workshop")->fetchColumn();
 
-    // === Most Common Disability & Total Applicants (for clientD.php) ===
+    // Calculate most common disability and total applicants
     $stmt = $conn->query("SELECT disability, COUNT(*) AS count FROM users WHERE disability IS NOT NULL AND disability != '' GROUP BY disability");
     $disabilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     $mostCommonDisability = 'N/A';
     $totalApplicants = 0;
     $maxCount = 0;
-
     foreach ($disabilities as $row) {
         $count = (int)$row['count'];
         $totalApplicants += $count;
@@ -113,9 +50,10 @@ try {
             $mostCommonDisability = $row['disability'];
         }
     }
+
+    // Volunteer data
     $volunteerLabels = [];
     $volunteerCounts = [];
-
     $volunteerQuery = $conn->query("
         SELECT MONTH(volunteered_at) AS month, COUNT(*) AS total
         FROM workshop_volunteers
@@ -123,26 +61,62 @@ try {
         GROUP BY MONTH(volunteered_at)
         ORDER BY MONTH(volunteered_at)
     ");
-
     $monthMap = [
         1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
         5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
         9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
     ];
-
     while ($row = $volunteerQuery->fetch(PDO::FETCH_ASSOC)) {
         $monthNum = (int)$row['month'];
         $volunteerLabels[] = $monthMap[$monthNum];
         $volunteerCounts[] = (int)$row['total'];
     }
 
+    // Top Skills Analysis
+    $skillsData = [];
+    $skillsStmt = $conn->query("SELECT skills_requirement FROM jobpost WHERE skills_requirement IS NOT NULL AND skills_requirement != ''");
+    while ($row = $skillsStmt->fetch(PDO::FETCH_ASSOC)) {
+        $skills = explode(',', strtolower($row['skills_requirement']));
+        foreach ($skills as $skill) {
+            $skill = trim($skill);
+            if ($skill) {
+                $skillsData[$skill] = ($skillsData[$skill] ?? 0) + 1;
+            }
+        }
+    }
+    arsort($skillsData);
+    $topSkills = array_slice($skillsData, 0, 10, true);
+    $topSkillLabels = array_keys($topSkills);
+    $topSkillCounts = array_values($topSkills);
+
+    // Top Companies Hiring PWDs
+    $companyStmt = $conn->query("
+    SELECT 
+        u.company, 
+        COUNT(*) AS matching_disability_count
+    FROM jobpost j
+    INNER JOIN users u ON j.user_id = u.user_id -- company posting the job
+    INNER JOIN users seeker ON seeker.disability = j.disability_requirement AND seeker.user_type = 'job_seeker'
+    WHERE u.company IS NOT NULL AND u.company != ''
+    GROUP BY u.company
+    ORDER BY matching_disability_count DESC
+    LIMIT 10
+    ");
+
+    $topCompanyNames = [];
+    $topCompanyCounts = [];
+
+    while ($row = $companyStmt->fetch(PDO::FETCH_ASSOC)) {
+        $topCompanyNames[] = $row['company'];
+        $topCompanyCounts[] = (int)$row['matching_disability_count'];
+    }
+
+
+
+    // Output JSON
     echo json_encode([
-        'disabilityLabels' => $disabilityLabels,
-        'disabilityCounts' => $disabilityCounts,
         'volunteerLabels' => $volunteerLabels,
         'volunteerCounts' => $volunteerCounts,
-        'monthlyLabels' => $monthlyLabels,
-        'monthlyCounts' => $monthlyCounts,
         'pipeline' => [
             'available' => $available,
             'completed' => $completed,
@@ -150,11 +124,15 @@ try {
         ],
         'mostCommonJob' => $mostCommonJob,
         'totalWorkshops' => $workshopTotal,
-        'most_common_disability' => $mostCommonDisability,
-        'total_applicants' => $totalApplicants
+        'mostCommonDisability' => $mostCommonDisability,
+        'totalApplicants' => $totalApplicants,
+        'topSkillLabels' => $topSkillLabels,
+        'topSkillCounts' => $topSkillCounts,
+        'topCompanyNames' => $topCompanyNames,
+        'topCompanyCounts' => $topCompanyCounts,
+        'clientDisabilityLabels' => $clientDisabilityLabels,
+        'clientDisabilityCounts' => $clientDisabilityCounts
     ]);
-    // === Client Volunteer Count per Month ===
-    
 } catch (PDOException $e) {
     echo json_encode(['error' => $e->getMessage()]);
     exit;

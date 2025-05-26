@@ -326,7 +326,7 @@ button:hover {
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
     :root {
-        --text-color: #f9fafb;
+        --text-color: #1f2937;
         --text-light: #9ca3af;
         --light-bg: #1f2937;
         --border-color: #374151;
@@ -334,15 +334,15 @@ button:hover {
     }
     
     body {
-        background: #111827;
+        background: #D6EAF8;
     }
     
     .resume-builder {
-        background-color: #1f2937;
+        background-color: #FFFF;
     }
     
     .section {
-        background: #1f2937;
+        background: #D6EAF8;
     }
     
     input[type="text"],
@@ -350,7 +350,7 @@ button:hover {
     input[type="tel"],
     input[type="date"],
     textarea {
-        background: #374151;
+        background: #FFFF;
         color: var(--text-color);
     }
     
@@ -359,12 +359,12 @@ button:hover {
     input[type="tel"]:focus,
     input[type="date"]:focus,
     textarea:focus {
-        background: #374151;
+        background: #FFFF;
     }
     
     .education-entry,
     .experience-entry,
     .project-entry {
-        background-color: #374151;
+        background-color: #FFFF;
     }
 } 

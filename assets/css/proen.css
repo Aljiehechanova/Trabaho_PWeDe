@@ -8,14 +8,6 @@
   max-width: 800px !important; /* or whatever max width you prefer */
   margin: 0 auto 20px auto !important; /* Center horizontally */
 }
-.content-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* keep top-aligned */
-  padding: 100px 20px 40px; /* ⬅️ added 100px top padding */
-  min-height: calc(100vh - 70px); /* subtract navbar height */
-  background-color: #2C3E50;
-}
 
 .content-wrapper .main-content {
   background-color: #ffffff;
@@ -24,8 +16,8 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 30px;
   max-width: 800px;
-  width: 100%;
-  margin: 0 20px 20px 20px;
+  width: calc(100% - 270px); /* fill remaining width */
+  margin-left: 300px; /* leave space for sidebar */
 }
 .action-buttons {
   margin-bottom: 30px;

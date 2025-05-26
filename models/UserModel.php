@@ -8,7 +8,25 @@ class UserModel
         $this->conn = $db;
     }
 
-    // Check if email exists in the users table
+    // --------------------------
+    // Validation Methods
+    // --------------------------
+
+    private function isValidEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function isValidPassword($password)
+    {
+        // At least 8 characters, with uppercase, lowercase, number, and special character
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/', $password);
+    }
+
+    // --------------------------
+    // Email Check
+    // --------------------------
+
     public function emailExists($email)
     {
         $stmt = $this->conn->prepare("SELECT user_id FROM users WHERE email = ?");
@@ -16,7 +34,10 @@ class UserModel
         return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
 
-    // Fetch user by email (for login)
+    // --------------------------
+    // Authentication & Retrieval
+    // --------------------------
+
     public function getUserByEmail($email)
     {
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -24,65 +45,75 @@ class UserModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Register a new user
+    // --------------------------
+    // Registration
+    // --------------------------
+
     public function registerJobSeeker($user_type, $fullname, $email, $password, $disability)
     {
         if ($this->emailExists($email)) {
-            return "Email already exists in the user database.";
+            return "Email already exists.";
         }
 
         if (!$this->isValidEmail($email)) {
-            return "Invalid email address. Please use a real email.";
+            return "Invalid email address.";
         }
 
         if (!$this->isValidPassword($password)) {
-            return "Password must be at least 8 characters long, include uppercase, lowercase, and a special character.";
+            return "Password must be at least 8 characters, include uppercase, lowercase, number, and a special character.";
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->conn->prepare("INSERT INTO users (user_type, fullname, email, password, disability) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $this->conn->prepare("
+            INSERT INTO users (user_type, fullname, email, password, disability_type)
+            VALUES (?, ?, ?, ?, ?)
+        ");
         return $stmt->execute([$user_type, $fullname, $email, $hashedPassword, $disability]);
     }
 
     public function registerClient($user_type, $fullname, $email, $password)
     {
         if ($this->emailExists($email)) {
-            return "Email already exists in the user database.";
+            return "Email already exists.";
         }
 
         if (!$this->isValidEmail($email)) {
-            return "Invalid email address. Please use a real email.";
+            return "Invalid email address.";
         }
 
         if (!$this->isValidPassword($password)) {
-            return "Password must be at least 8 characters long, include uppercase, lowercase, and a special character.";
+            return "Password must be at least 8 characters, include uppercase, lowercase, number, and a special character.";
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->conn->prepare("INSERT INTO users (user_type, fullname, email, password) VALUES (?, ?, ?, ?)");
+        $stmt = $this->conn->prepare("
+            INSERT INTO users (user_type, fullname, email, password)
+            VALUES (?, ?, ?, ?)
+        ");
         return $stmt->execute([$user_type, $fullname, $email, $hashedPassword]);
     }
 
-    // Validate email using PHP's filter_var
-    private function isValidEmail($email)
-    {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
+    // --------------------------
+    // Profile Update
+    // --------------------------
 
-    // Password validation for strength
-    private function isValidPassword($password)
+    public function updateUser($id, $fullname, $email, $description, $location, $disability)
     {
-        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/', $password);
-    }
-    public function updateUser($user_id, $fullname, $email, $description, $location, $disability) {
         $sql = "UPDATE users 
-                SET fullname = ?, email = ?, description = ?, location = ?, disability = ?
-                WHERE user_id = ?";
+                SET fullname = :fullname, email = :email, description = :description, 
+                    location = :location, disability = :disability_type 
+                WHERE user_id = :user_id";
+
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$fullname, $email, $description, $location, $disability, $user_id]);
+
+        return $stmt->execute([
+            ':fullname' => $fullname,
+            ':email' => $email,
+            ':description' => $description,
+            ':location' => $location,
+            ':disability_type' => $disability,
+            ':user_id' => $id
+        ]);
     }
-    
-    
-    
 }
 ?>

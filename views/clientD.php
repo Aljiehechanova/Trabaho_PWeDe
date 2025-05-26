@@ -33,7 +33,7 @@ try {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="../assets/js/chart.js"></script>
+  <script src="../assets/js/chart.js" defer></script>
 </head>
 <body>
 
@@ -77,41 +77,52 @@ try {
     </ul>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content">
-  <!-- Metrics Section -->
+    <!-- Metrics Section -->
     <div class="section-box">
-        <div class="row text-center">
+      <div class="row text-center">
         <div class="col-md-6">
-            <div class="dashboard-card">
+          <div class="dashboard-card">
             <h4>Most Common Disability</h4>
             <p id="mostCommonDisability" class="fs-3 fw-bold text-primary">Loading...</p>
-            </div>
+          </div>
         </div>
         <div class="col-md-6">
-            <div class="dashboard-card">
+          <div class="dashboard-card">
             <h4>Total Applicants</h4>
             <p id="totalApplicantsCount" class="fs-3 fw-bold text-success">Loading...</p>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
 
     <!-- Pie Chart Section -->
     <div class="section-box">
-        <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
-        <div class="chart-container d-flex justify-content-center">
+      <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantPieChart" height="300"></canvas>
-        </div>
+      </div>
+      <div id="userList" class="mt-4 p-3 bg-light border rounded shadow-sm">
+        <h6 class="fw-bold">Click on a slice to view users by disability.</h6>
+        <ul class="list-unstyled mb-0" id="userListContent"></ul>
+      </div>
     </div>
 
     <!-- Bar Chart Section -->
     <div class="section-box">
-        <h5 class="text-center">Workshop Volunteer by Month (Bar Chart)</h5>
-        <div class="chart-container d-flex justify-content-center">
+      <h5 class="text-center">Workshop Volunteer by Month (Bar Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantBarChart" height="300"></canvas>
-        </div>
+      </div>
+      
+      <!-- ✅ Volunteer List Output Section -->
+      <div id="volunteerList" class="mt-4 p-3 bg-light border rounded shadow-sm">
+        <h6 class="fw-bold">Click on a bar to view volunteers for that month.</h6>
+        <ul class="list-unstyled mb-0" id="volunteerListContent"></ul>
+      </div>
     </div>
-    </div>
-  </div>
+</div>
+
 </body>
 </html>

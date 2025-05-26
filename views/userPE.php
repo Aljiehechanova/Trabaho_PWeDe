@@ -11,9 +11,17 @@ $user_id = $_SESSION['user_id'];
 
 // Fetch user data
 try {
-    $stmt = $conn->prepare("SELECT fullname, img, resume FROM users WHERE user_id = ?");
+    $stmt = $conn->prepare("SELECT fullname, img, resume, email FROM users WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        die("User not found.");
+    }
+
+    $loggedInEmail = $user['email'];
+
+    // Fetch user messages
     $stmt = $conn->prepare("
         SELECT m.sender_email, m.subject, m.message 
         FROM messages m
@@ -22,9 +30,6 @@ try {
     ");
     $stmt->execute([$loggedInEmail]);
     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (!$user) {
-        die("User not found.");
-    }
 } catch (PDOException $e) {
     die("User fetch error: " . $e->getMessage());
 }
@@ -70,6 +75,8 @@ try {
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
+
+// Fetch notifications
 $notif_stmt = $conn->prepare("SELECT message, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
 $notif_stmt->execute([$user_id]);
 $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,7 +99,7 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="UserD.php">
       <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
-      <span class="fw-bold">TrabahoPWeDe</span>
+      <span class="fw-bold">Trabaho</span><span class="fw-bold" style="color: blue">PWeDe</span>
     </a>
 
     <div class="ms-auto d-flex align-items-center">
@@ -142,7 +149,7 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </nav>
-
+<div class="layout-container">
 <div class="sidebar">
     <ul>
         <li class="active"><a href="userPE.php">Profile Enhancer</a></li>
@@ -152,7 +159,6 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     </ul>
 </div>
 
-<div class="content-wrapper">
     <div class="main-content">
         <?php if (!empty($_SESSION['message'])): ?>
             <div class="alert alert-info"><?= htmlspecialchars($_SESSION['message']) ?></div>
@@ -200,7 +206,6 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
-
 <!-- Resume Upload Modal -->
 <div id="resumeModal" class="modal">
     <div class="modal-content">
