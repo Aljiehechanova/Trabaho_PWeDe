@@ -327,7 +327,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Output PDF
     $dompdf->stream('resume.pdf', array('Attachment' => true));
 } else {
-    header("Location: index.php");
+    header("Location: userPE    .php");
     exit();
 }
 ?> 

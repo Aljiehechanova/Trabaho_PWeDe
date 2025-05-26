@@ -33,7 +33,7 @@ nav.navbar {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 120px 20px 60px;  /* Top padding below navbar */
+  padding: 50px 20px 60px;  /* Top padding below navbar */
   min-height: 100vh;
   box-sizing: border-box;
   background-color: #2C3E50;
@@ -45,10 +45,10 @@ nav.navbar {
   border: 2px solid #c2e0c6 !important;
   border-radius: 10px !important;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
-  padding: 40px !important;
+  padding: 20px !important;
   width: 100%;
   max-width: 850px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 10px auto;
   box-sizing: border-box;
 }
 

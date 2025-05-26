@@ -49,7 +49,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <span class="fw-bold">TrabahoPWeDe</span>
     </a>
     <div class="ms-auto d-flex align-items-center">
-      <a href="#" class="d-flex align-items-center text-decoration-none me-3">
+      <a href="clientP.php" class="d-flex align-items-center text-decoration-none me-3">
         <img src="<?= htmlspecialchars($client['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
         <span class="fw-semibold text-dark"><?= htmlspecialchars($client['fullname']) ?></span>
       </a>
@@ -72,6 +72,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="sidebar">
     <ul>
       <li><a href="clientL.php">View Job List</a></li>
+      <li><a href="clientW.php">View Workshop Volunteer</a></li>
       <li><a href="posting.php">Posting</a></li>
       <li><a href="clientD.php">Analytic Dashboard</a></li>
       <li class="active"><a href="clientM.php">Inbox</a></li>

@@ -80,13 +80,19 @@ try {
   <!-- Main Content -->
 <div class="main-content">
 
-<!-- Metrics Section -->
 <div class="section-box">
   <div class="row text-center">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-3">
       <div class="dashboard-card">
-        <h4>Total Jobs Available/Hiring</h4>
-        <p id="totalJobs" class="fs-3 fw-bold text-primary">Loading...</p>
+        <h4>Most Common Job Offered</h4>
+        <p id="mostCommonJob" class="fs-5 fw-bold text-primary">Loading...</p>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <div class="dashboard-card">
+        <h4>Total Workshops Available</h4>
+        <p id="totalWorkshops" class="fs-5 fw-bold text-success">Loading...</p>
       </div>
     </div>
   </div>
@@ -116,19 +122,19 @@ try {
   </div>
 </div>
 
-<!-- Pie Chart Section -->
 <div class="section-box">
-  <h5 class="text-center">Disability Types Distribution (Pie Chart)</h5>
+  <h5 class="text-center">Number of Users per Disability Type with Workshop Participation</h5>
   <div class="chart-container d-flex justify-content-center">
-    <canvas id="disabilityPie" height="300"></canvas>
+    <canvas id="workshopDonut" width="400" height="300"></canvas>
   </div>
 </div>
 
-<!-- Bar Chart Section -->
+
+<!-- Bar Chart -->
 <div class="section-box">
-  <h5 class="text-center">Disability Types (Bar Chart)</h5>
+  <h5 class="text-center">Workshop Activity Per Month (Bar Chart)</h5>
   <div class="chart-container d-flex justify-content-center">
-    <canvas id="disabilityBar" height="300"></canvas>
+    <canvas id="workshopBar" width="400" height="300"></canvas>
   </div>
 </div>
 

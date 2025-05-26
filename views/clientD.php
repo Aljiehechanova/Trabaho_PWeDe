@@ -45,7 +45,7 @@ try {
       <span class="fw-bold">TrabahoPWeDe</span>
     </a>
     <div class="ms-auto d-flex align-items-center">
-      <a href="#" class="d-flex align-items-center text-decoration-none me-3">
+      <a href="clientP.php" class="d-flex align-items-center text-decoration-none me-3">
         <img src="<?= htmlspecialchars($client['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
         <span class="fw-semibold text-dark"><?= htmlspecialchars($client['fullname']) ?></span>
       </a>
@@ -70,64 +70,48 @@ try {
   <div class="sidebar">
     <ul>
       <li><a href="clientL.php">View Job List</a></li>
+      <li><a href="clientW.php">View Workshop Volunteer</a></li>
       <li><a href="posting.php">Posting</a></li>
       <li class="active"><a href="clientD.php">Analytic Dashboard</a></li>
       <li><a href="clientM.php">Inbox</a></li>
     </ul>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content">
-    <!-- Metrics Section -->
+  <!-- Metrics Section -->
     <div class="section-box">
-      <div class="row text-center">
+        <div class="row text-center">
         <div class="col-md-6">
-          <div class="dashboard-card">
-            <h4>Total Jobs Posted</h4>
-            <p id="totalJobsPosted" class="fs-3 fw-bold text-primary">Loading...</p>
-          </div>
+            <div class="dashboard-card">
+            <h4>Most Common Disability</h4>
+            <p id="mostCommonDisability" class="fs-3 fw-bold text-primary">Loading...</p>
+            </div>
         </div>
-      </div>
-    </div>
-
-    <div class="section-box">
-      <div class="row text-center">
         <div class="col-md-6">
-          <h4 class="text-center mb-3">Hiring Pipeline Summary</h4>
-          <table class="table table-bordered text-center">
-            <thead class="table-light">
-              <tr>
-                <th>Applicants</th>
-                <th>Interviews</th>
-                <th>Hired</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="totalApplicants">Loading...</td>
-                <td id="totalInterviews">Loading...</td>
-                <td id="totalHired">Loading...</td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="dashboard-card">
+            <h4>Total Applicants</h4>
+            <p id="totalApplicantsCount" class="fs-3 fw-bold text-success">Loading...</p>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
 
     <!-- Pie Chart Section -->
     <div class="section-box">
-      <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
-      <div class="chart-container d-flex justify-content-center">
+        <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
+        <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantPieChart" height="300"></canvas>
-      </div>
+        </div>
     </div>
 
     <!-- Bar Chart Section -->
     <div class="section-box">
-      <h5 class="text-center">Applicants by Disability Type (Bar Chart)</h5>
-      <div class="chart-container d-flex justify-content-center">
+        <h5 class="text-center">Applicants by Disability Type (Bar Chart)</h5>
+        <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantBarChart" height="300"></canvas>
-      </div>
+        </div>
+    </div>
     </div>
   </div>
-</div>
+</body>
+</html>

@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = $_POST['password'];
         $disability = $_POST['disability'];
 
+        // Register the job seeker (assuming method handles hashing and checks)
         $result = $userController->registerJobSeeker($user_type, $fullname, $email, $password, $disability);
 
         if ($result === true) {
@@ -29,10 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Job Seeker Registration - Trabaho PWeDe</title>
     <link rel="stylesheet" href="../assets/css/register.css">
+    <style>
+        .valid { color: green; }
+        .invalid { color: red; }
+        .valid::before { content: "✔ "; }
+        .invalid::before { content: "✘ "; }
+    </style>
 </head>
 
 <body>
@@ -42,9 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <h2 class="text-center">Job Seeker Registration</h2>
 
                 <?php if (!empty($error)) { ?>
-                    <script>
-                        alert("<?php echo $error; ?>");
-                    </script>
+                    <script>alert("<?php echo $error; ?>");</script>
                 <?php } ?>
 
                 <form method="POST">
@@ -65,24 +69,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="password-requirements">
                         <p>Password must contain:</p>
                         <ul id="passwordRules">
-                            <li id="length" class="invalid">✔ More than 8 characters</li>
-                            <li id="uppercase" class="invalid">✔ An uppercase letter</li>
-                            <li id="lowercase" class="invalid">✔ A lowercase letter</li>
-                            <li id="number" class="invalid">✔ A number (0–9)</li>
-                            <li id="special" class="invalid">✔ A special character (!@#$%^&*)</li>
+                            <li id="length" class="invalid">More than 8 characters</li>
+                            <li id="uppercase" class="invalid">An uppercase letter</li>
+                            <li id="lowercase" class="invalid">A lowercase letter</li>
+                            <li id="number" class="invalid">A number (0–9)</li>
+                            <li id="special" class="invalid">A special character (!@#$%^&*)</li>
                         </ul>
                     </div>
 
                     <div class="mb-3">
                         <label for="disability" class="form-label">Disability</label>
                         <select class="form-select" id="disability" name="disability" required>
-                            <option value="" disabled <?= empty($user['disability']) ? 'selected' : '' ?>>Select Disability</option>
-                            <option value="Visual Impairment" <?= ($user['disability'] === 'Visual Impairment') ? 'selected' : '' ?>>Visual Impairment</option>
-                            <option value="Hearing Impairment" <?= ($user['disability'] === 'Hearing Impairment') ? 'selected' : '' ?>>Hearing Impairment</option>
-                            <option value="Physical Impairment" <?= ($user['disability'] === 'Physical Impairment') ? 'selected' : '' ?>>Physical Impairment</option>
-                            <option value="Speech Impairment" <?= ($user['disability'] === 'Speech Impairment') ? 'selected' : '' ?>>Speech Impairment</option>
+                            <option value="" disabled <?= (!isset($_POST['disability']) || $_POST['disability'] == '') ? 'selected' : '' ?>>Select Disability</option>
+                            <option value="Visual Impairment" <?= (isset($_POST['disability']) && $_POST['disability'] === 'Visual Impairment') ? 'selected' : '' ?>>Visual Impairment</option>
+                            <option value="Hearing Impairment" <?= (isset($_POST['disability']) && $_POST['disability'] === 'Hearing Impairment') ? 'selected' : '' ?>>Hearing Impairment</option>
+                            <option value="Physical Impairment" <?= (isset($_POST['disability']) && $_POST['disability'] === 'Physical Impairment') ? 'selected' : '' ?>>Physical Impairment</option>
+                            <option value="Speech Impairment" <?= (isset($_POST['disability']) && $_POST['disability'] === 'Speech Impairment') ? 'selected' : '' ?>>Speech Impairment</option>
                         </select>
-                        </div>
+                    </div>
+
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="agreement" name="agreement">
                         <label class="form-check-label" for="agreement">
@@ -90,28 +95,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 href="privacy.php" target="_blank">Privacy Policy</a>.
                         </label>
                     </div>
+
                     <button type="submit" class="btn btn-primary w-100">Register</button>
                 </form>
             </div>
         </div>
     </div>
-</body>
+
 <script>
 document.querySelector('input[name="password"]').addEventListener('input', function () {
     const password = this.value;
 
-    const length = document.getElementById('length');
-    const uppercase = document.getElementById('uppercase');
-    const lowercase = document.getElementById('lowercase');
-    const number = document.getElementById('number');
-    const special = document.getElementById('special');
-
-    // Apply validation for each rule
-    length.className = password.length > 8 ? 'valid' : 'invalid';
-    uppercase.className = /[A-Z]/.test(password) ? 'valid' : 'invalid';
-    lowercase.className = /[a-z]/.test(password) ? 'valid' : 'invalid';
-    number.className = /\d/.test(password) ? 'valid' : 'invalid';
-    special.className = /[!@#$%^&*]/.test(password) ? 'valid' : 'invalid';
+    document.getElementById('length').className = password.length > 8 ? 'valid' : 'invalid';
+    document.getElementById('uppercase').className = /[A-Z]/.test(password) ? 'valid' : 'invalid';
+    document.getElementById('lowercase').className = /[a-z]/.test(password) ? 'valid' : 'invalid';
+    document.getElementById('number').className = /\d/.test(password) ? 'valid' : 'invalid';
+    document.getElementById('special').className = /[!@#$%^&*]/.test(password) ? 'valid' : 'invalid';
 });
 </script>
+</body>
 </html>

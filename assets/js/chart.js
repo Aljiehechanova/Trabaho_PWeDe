@@ -1,66 +1,130 @@
 document.addEventListener("DOMContentLoaded", function () {
-  fetch('../api/chart-data.php')
-    .then(res => res.json())
+  fetch('../charts/chart-data.php')
+    .then(response => response.json())
     .then(data => {
-      if (!data || !data.labels || !data.counts) {
-        console.error('Invalid data:', data);
+      if (!data || data.error) {
+        console.error("Error loading chart data:", data?.error ?? "Unknown error");
         return;
       }
 
-      // Update text stats
-      document.getElementById('totalJobs').textContent = data.totalJobs ?? '0';
-      document.getElementById('jobsAvailable').textContent = data.pipeline?.available ?? '0';
-      document.getElementById('jobsCompleted').textContent = data.pipeline?.completed ?? '0';
-      document.getElementById('jobsOffered').textContent = data.pipeline?.offered ?? '0';
+      // === For userD.php ===
+      if (document.getElementById("mostCommonJob")) {
+        document.getElementById("mostCommonJob").textContent = data.mostCommonJob ?? 'N/A';
+      }
+      if (document.getElementById("totalWorkshops")) {
+        document.getElementById("totalWorkshops").textContent = data.totalWorkshops ?? '0';
+      }
+      if (document.getElementById("jobsAvailable")) {
+        document.getElementById("jobsAvailable").textContent = data.pipeline?.available ?? '0';
+      }
+      if (document.getElementById("jobsCompleted")) {
+        document.getElementById("jobsCompleted").textContent = data.pipeline?.completed ?? '0';
+      }
+      if (document.getElementById("jobsOffered")) {
+        document.getElementById("jobsOffered").textContent = data.pipeline?.offered ?? '0';
+      }
 
-      // Pie chart
-      const ctxPie = document.getElementById('disabilityPie').getContext('2d');
-      new Chart(ctxPie, {
-        type: 'pie',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Disability Requirements',
-            data: data.counts,
-            backgroundColor: ['#007bff', '#ffc107', '#dc3545', '#28a745', '#6610f2'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: 'bottom' }
-          }
-        }
-      });
-
-      // Bar chart
-      const ctxBar = document.getElementById('disabilityBar').getContext('2d');
-      new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Job Posts by Disability',
-            data: data.counts,
-            backgroundColor: 'rgba(0, 123, 255, 0.5)',
-            borderColor: '#007bff',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: { display: true, text: 'Job Count' }
-            },
-            x: {
-              title: { display: true, text: 'Disability Type' }
+      // === Donut Chart for userD.php ===
+      if (document.getElementById("workshopDonut")) {
+        new Chart(document.getElementById("workshopDonut"), {
+          type: 'doughnut',
+          data: {
+            labels: data.disabilityLabels,
+            datasets: [{
+              data: data.disabilityCounts,
+              backgroundColor: ['#1abc9c', '#f39c12', '#3498db', '#9b59b6', '#e74c3c', '#2ecc71']
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' }
             }
           }
-        }
-      });
+        });
+      }
+
+      // === Bar Chart for userD.php ===
+      if (document.getElementById("workshopBar")) {
+        new Chart(document.getElementById("workshopBar"), {
+          type: 'bar',
+          data: {
+            labels: data.monthlyLabels,
+            datasets: [{
+              label: 'Workshop Activity',
+              data: data.monthlyCounts,
+              backgroundColor: 'rgba(52, 152, 219, 0.6)',
+              borderColor: '#3498db',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Entries' }
+              },
+              x: {
+                title: { display: true, text: 'Month' }
+              }
+            }
+          }
+        });
+      }
+
+      // === For clientD.php ===
+      if (document.getElementById("mostCommonDisability")) {
+        document.getElementById("mostCommonDisability").textContent = data.most_common_disability ?? 'N/A';
+      }
+      if (document.getElementById("totalApplicantsCount")) {
+        document.getElementById("totalApplicantsCount").textContent = data.total_applicants ?? '0';
+      }
+
+      // === Pie Chart for clientD.php ===
+      if (document.getElementById("applicantPieChart")) {
+        new Chart(document.getElementById("applicantPieChart"), {
+          type: "pie",
+          data: {
+            labels: data.disabilityLabels,
+            datasets: [{
+              label: "Applicants",
+              data: data.disabilityCounts,
+              backgroundColor: ["#007bff", "#28a745", "#ffc107", "#dc3545", "#6f42c1"]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' }
+            }
+          }
+        });
+      }
+
+      // === Bar Chart for clientD.php ===
+      if (document.getElementById("applicantBarChart")) {
+        new Chart(document.getElementById("applicantBarChart"), {
+          type: "bar",
+          data: {
+            labels: data.disabilityLabels,
+            datasets: [{
+              label: "Applicants",
+              data: data.disabilityCounts,
+              backgroundColor: "#007bff"
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { precision: 0 }
+              }
+            }
+          }
+        });
+      }
     })
     .catch(err => {
       console.error('Fetch error:', err);

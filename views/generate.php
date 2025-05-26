@@ -407,7 +407,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button onclick="window.print()">
             <i class="fas fa-print"></i> Print Resume
         </button>
-        <button onclick="window.location.href='index.php'">
+        <button onclick="window.location.href='userPE.php'">
             <i class="fas fa-arrow-left"></i> Back to Builder
         </button>
     </div>
@@ -415,7 +415,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </html>
 <?php
 } else {
-    header("Location: index.php");
+    header("Location: userPE.php");
     exit();
 }
 ?> 

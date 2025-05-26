@@ -65,6 +65,7 @@ try {
 <div class="sidebar">
     <ul>
         <li><a href="clientL.php">View Job List</a></li>
+        <li><a href="clientW.php">View Workshop Volunteer</a></li>
         <li class="active"><a href="posting.php">Posting</a></li>
         <li><a href="clientD.php">Analytic Dashboard</a></li>
         <li><a href="clientM.php">Inbox</a></li>
@@ -150,14 +151,26 @@ try {
             <form action="SW.php" method="POST">
                 <input type="hidden" name="user_id" value="<?= $user_id ?>">
 
-                <label for="workshopTitle">Workshop Title:</label>
-                <input type="text" id="workshopTitle" name="workshopTitle" required>
+                <label for="work_title">Workshop Title:</label>
+                <input type="text" id="work_title" name="work_title" required>
 
-                <label for="workshopDescription">Workshop Description:</label>
-                <textarea id="workshopDescription" name="workshopDescription" rows="4" required></textarea>
+                <label for="entry_date">Start Date:</label>
+                <input type="date" id="entry_date" name="entry_date" required>
 
-                <label for="targetSkills">Target Skills:</label>
-                <input type="text" id="targetSkills" name="targetSkills" required>
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required>
+
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+
+                <label for="hostname">Host Name:</label>
+                <input type="text" id="hostname" name="hostname" value="<?= htmlspecialchars($user['fullname']) ?>" readonly>
+
+                <label for="description">Workshop Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+
+                <label for="target_skills">Target Skills:</label>
+                <input type="text" id="target_skills" name="target_skills" required>
 
                 <button type="submit">Submit Workshop Application</button>
             </form>

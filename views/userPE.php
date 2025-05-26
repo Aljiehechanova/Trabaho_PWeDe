@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['resume'])) {
             $update->execute([$relativePath, $user_id]);
 
             $uploadStatus = "Resume uploaded successfully.";
-            $user['resume'] = $relativePath; // Update in current session
+            $user['resume'] = $relativePath;
         } else {
             $uploadStatus = "Failed to upload resume.";
         }
@@ -74,6 +74,7 @@ try {
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/proen.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
@@ -95,7 +96,7 @@ try {
           <li><a class="dropdown-item" href="userP.php">Edit Profile</a></li>
           <li><a class="dropdown-item" href="#">Change Password</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
+          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -113,6 +114,11 @@ try {
 
 <div class="content-wrapper">
     <div class="main-content">
+        <?php if (!empty($_SESSION['message'])): ?>
+            <div class="alert alert-info"><?= htmlspecialchars($_SESSION['message']) ?></div>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+
         <div class="action-buttons mb-3">
             <button onclick="location.href='RG.php'">Resume Builder</button>
             <button onclick="openModal()">Upload Resume</button>
@@ -134,13 +140,20 @@ try {
         <div class="workshop-list">
             <h2>List of Workshops</h2>
             <?php if (!empty($workshops)): ?>
-                <?php foreach ($workshops as $workshop): ?>
-                    <div class="workshop-item">
-                        <h4><?= htmlspecialchars($workshop['work_title']) ?></h4>
-                        <small><?= date('F j, Y', strtotime($workshop['entry_date'])) ?> to <?= date('F j, Y', strtotime($workshop['end_date'])) ?> — <?= htmlspecialchars($workshop['location']) ?></small>
-                        <div><strong>Host:</strong> <?= htmlspecialchars($workshop['hostname']) ?></div>
-                    </div>
-                <?php endforeach; ?>
+            <?php foreach ($workshops as $workshop): ?>
+                <div class="workshop-item mb-3 p-3 border rounded bg-light">
+                    <h4><?= htmlspecialchars($workshop['work_title']) ?></h4>
+                    <small><?= date('F j, Y', strtotime($workshop['entry_date'])) ?> to <?= date('F j, Y', strtotime($workshop['end_date'])) ?> — <?= htmlspecialchars($workshop['location']) ?></small>
+                    <div><strong>Host:</strong> <?= htmlspecialchars($workshop['hostname']) ?></div>
+
+                    <form method="POST" action="volunteer_handler.php" class="mt-2" onsubmit="return confirmVolunteer('<?= $user_id ?>')">
+                        <input type="hidden" name="work_title" value="<?= htmlspecialchars($workshop['work_title']) ?>">
+                        <input type="hidden" name="entry_date" value="<?= htmlspecialchars($workshop['entry_date']) ?>">
+                        <input type="hidden" name="host" value="<?= htmlspecialchars($workshop['hostname']) ?>">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Volunteer</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
             <?php else: ?>
                 <p>No workshops found.</p>
             <?php endif; ?>
@@ -171,6 +184,9 @@ function printResume() {
     const win = window.open("../<?= htmlspecialchars($user['resume']) ?>", '_blank');
     win.focus();
     win.onload = () => win.print();
+}
+function confirmVolunteer(userId) {
+    return confirm("Are you sure you want to volunteer?");
 }
 </script>
 </body>

@@ -50,6 +50,9 @@ if (!$user) {
 </nav>
 
 <div class="container mt-5">
+    <div class="mb-3">
+      <a href="UserD.php" class="btn btn-outline-primary">&larr; Go to Dashboard</a>
+    </div>
     <div class="profile-card text-center">
         <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile Picture" onerror="this.onerror=null;this.src='../assets/images/alterprofile.png';" class="profile-img" data-bs-toggle="modal" data-bs-target="#editPhotoModal">
 
@@ -59,54 +62,48 @@ if (!$user) {
         <p><strong>Description:</strong> <?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
         <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
-
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-            Edit Profile
-        </button>
-
-        <?php if (!empty($user['resume'])): ?>
-            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#resumeModal">
-                View Resume
-            </button>
-        <?php endif; ?>
+        <div class="d-flex justify-content-center gap-2 mt-3">
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+              Edit Profile
+          </button>
+          <?php if (!empty($user['resume'])): ?>
+              <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#resumeModal">
+                  View Resume
+              </button>
+              <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="resumeModalLabel">View Resume</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <?php
+                        $resumePath = "../" . htmlspecialchars($user['resume']);
+                        $ext = strtolower(pathinfo($resumePath, PATHINFO_EXTENSION));
+                        if ($ext === 'pdf') {
+                            echo "<iframe id='resumeFrame' src='$resumePath' width='100%' height='600px' style='border: none;'></iframe>";
+                        } else {
+                            echo "<p>Resume format not supported for preview. <a href='$resumePath' download>Download it here</a>.</p>";
+                        }
+                      ?>
+                    </div>
+                    <div class="modal-footer">
+                      <a href="<?= $resumePath ?>" class="btn btn-success" download>Download</a>
+                      <button type="button" class="btn btn-primary" onclick="printResume()">Print</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          <?php endif; ?> 
+        </div>          
     </div>
 </div> <!-- End of container -->
 
 <!-- View Resume Modal (moved outside the container) -->
 <!-- Resume Modal -->
-<?php if (!empty($user['resume'])): ?>
-    <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#resumeModal">
-        View Resume
-    </button>
 
-    <!-- Resume Modal -->
-    <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="resumeModalLabel">View Resume</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <?php
-              $resumePath = "../" . htmlspecialchars($user['resume']);
-              $ext = strtolower(pathinfo($resumePath, PATHINFO_EXTENSION));
-              if ($ext === 'pdf') {
-                  echo "<iframe id='resumeFrame' src='$resumePath' width='100%' height='600px' style='border: none;'></iframe>";
-              } else {
-                  echo "<p>Resume format not supported for preview. <a href='$resumePath' download>Download it here</a>.</p>";
-              }
-            ?>
-          </div>
-          <div class="modal-footer">
-            <a href="<?= $resumePath ?>" class="btn btn-success" download>Download</a>
-            <button type="button" class="btn btn-primary" onclick="printResume()">Print</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-<?php endif; ?>
 
 
 <!-- Edit Profile Modal -->
