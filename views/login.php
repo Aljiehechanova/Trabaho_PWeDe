@@ -21,6 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: ../views/userP.php");
         } elseif ($user['user_type'] === 'client') {
             header("Location: ../views/clientP.php");
+        }elseif ($user['user_type'] === 'admin') {
+            header("Location: ../views/addash.php");
         }
         exit();
     }
