@@ -8,12 +8,14 @@ header('Content-Type: application/json');
 try {
     // === Donut Chart: Users per disability type with workshop participation ===
     $stmt = $conn->query("
-        SELECT u.disability, COUNT(DISTINCT u.user_id) AS user_count
-        FROM users u
-        INNER JOIN activitylog a ON u.user_id = a.user_id
-        WHERE u.disability IS NOT NULL AND u.disability != ''
-        GROUP BY u.disability
+        SELECT disability, COUNT(*) AS user_count
+        FROM users
+        WHERE disability IS NOT NULL 
+        AND disability != ''
+        AND with_workshop = 'yes'
+        GROUP BY disability
     ");
+
 
     $disabilityLabels = [];
     $disabilityCounts = [];
@@ -22,6 +24,7 @@ try {
         $disabilityLabels[] = $row['disability'];
         $disabilityCounts[] = (int)$row['user_count'];
     }
+
     $clientDisabilityLabels = [];
     $clientDisabilityCounts = [];
     
@@ -110,10 +113,34 @@ try {
             $mostCommonDisability = $row['disability'];
         }
     }
+    $volunteerLabels = [];
+    $volunteerCounts = [];
+
+    $volunteerQuery = $conn->query("
+        SELECT MONTH(volunteered_at) AS month, COUNT(*) AS total
+        FROM workshop_volunteers
+        WHERE YEAR(volunteered_at) = YEAR(CURRENT_DATE())
+        GROUP BY MONTH(volunteered_at)
+        ORDER BY MONTH(volunteered_at)
+    ");
+
+    $monthMap = [
+        1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+        5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+        9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
+    ];
+
+    while ($row = $volunteerQuery->fetch(PDO::FETCH_ASSOC)) {
+        $monthNum = (int)$row['month'];
+        $volunteerLabels[] = $monthMap[$monthNum];
+        $volunteerCounts[] = (int)$row['total'];
+    }
 
     echo json_encode([
         'disabilityLabels' => $disabilityLabels,
         'disabilityCounts' => $disabilityCounts,
+        'volunteerLabels' => $volunteerLabels,
+        'volunteerCounts' => $volunteerCounts,
         'monthlyLabels' => $monthlyLabels,
         'monthlyCounts' => $monthlyCounts,
         'pipeline' => [
@@ -126,6 +153,8 @@ try {
         'most_common_disability' => $mostCommonDisability,
         'total_applicants' => $totalApplicants
     ]);
+    // === Client Volunteer Count per Month ===
+    
 } catch (PDOException $e) {
     echo json_encode(['error' => $e->getMessage()]);
     exit;

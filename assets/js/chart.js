@@ -107,24 +107,26 @@ document.addEventListener("DOMContentLoaded", function () {
         new Chart(document.getElementById("applicantBarChart"), {
           type: "bar",
           data: {
-            labels: data.disabilityLabels,
+            labels: data.volunteerLabels,
             datasets: [{
-              label: "Applicants",
-              data: data.disabilityCounts,
-              backgroundColor: "#007bff"
+              label: "Volunteers per Month",
+              data: data.volunteerCounts,
+              backgroundColor: "#28a745"
             }]
           },
           options: {
             responsive: true,
             scales: {
               y: {
-                beginAtZero: true,
-                ticks: { precision: 0 }
+                beginAtZero: true
               }
+            },
+            plugins: {
+              legend: { display: false }
             }
           }
         });
-      }
+      }      
     })
     .catch(err => {
       console.error('Fetch error:', err);

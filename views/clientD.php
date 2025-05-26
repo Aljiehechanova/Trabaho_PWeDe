@@ -106,7 +106,7 @@ try {
 
     <!-- Bar Chart Section -->
     <div class="section-box">
-        <h5 class="text-center">Applicants by Disability Type (Bar Chart)</h5>
+        <h5 class="text-center">Workshop Volunteer by Month (Bar Chart)</h5>
         <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantBarChart" height="300"></canvas>
         </div>
