@@ -1,0 +1,30 @@
+<?php
+require_once '../config/db_connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_id'])) {
+    $appointment_id = $_POST['appointment_id'];
+
+    // First, get the jobpost_id
+    $stmt = $conn->prepare("SELECT jobpost_id FROM job_appointments WHERE appointment_id = ?");
+    $stmt->execute([$appointment_id]);
+    $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($appointment) {
+        $jobpost_id = $appointment['jobpost_id'];
+
+        // Mark the appointment as completed
+        $stmt = $conn->prepare("UPDATE job_appointments SET status = 'Completed' WHERE appointment_id = ?");
+        $stmt->execute([$appointment_id]);
+
+        // Update the jobpost status as well
+        $stmt = $conn->prepare("UPDATE jobpost SET status = 'Approved' WHERE jobpost_id = ?");
+        $stmt->execute([$jobpost_id]);
+
+        header("Location: approve_job.php");
+        exit;
+    } else {
+        echo "Invalid appointment.";
+    }
+} else {
+    echo "Invalid request.";
+}

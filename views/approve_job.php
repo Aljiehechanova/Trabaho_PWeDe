@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jobpost_id'], $_POST[
     }
 }
 
-// Fetch job posts with company info
+// Fetch only pending job posts
 try {
     $stmt = $conn->prepare("
         SELECT 
@@ -41,6 +41,7 @@ try {
             jp.status, u.company 
         FROM jobpost jp
         JOIN users u ON jp.user_id = u.user_id
+        WHERE jp.status = 'pending'
         ORDER BY jp.jobpost_id DESC
     ");
     $stmt->execute();
@@ -58,7 +59,6 @@ try {
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
@@ -82,7 +82,7 @@ try {
 
     <div class="main-content">
         <h2>Manage Job Post Approvals</h2>
-        <p>Approve or reject submitted job posts from companies.</p>
+        <p>Only pending job posts appear below for approval or rejection.</p>
 
         <table class="table table-bordered mt-4">
             <thead class="table-light">
@@ -93,7 +93,6 @@ try {
                     <th>Skills Required</th>
                     <th>Optional Skills</th>
                     <th>Company</th>
-                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -106,20 +105,15 @@ try {
                     <td><?= htmlspecialchars($job['skills_requirement']) ?></td>
                     <td><?= htmlspecialchars($job['optional_skills']) ?></td>
                     <td><?= htmlspecialchars($job['company']) ?></td>
-                    <td><?= ucfirst(htmlspecialchars($job['status'])) ?></td>
                     <td>
-                        <?php if ($job['status'] === 'pending'): ?>
-                            <form method="POST" style="display:inline-block;">
-                                <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
-                                <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
-                            </form>
-                            <form method="POST" style="display:inline-block;">
-                                <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
-                                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
-                            </form>
-                        <?php else: ?>
-                            <span class="text-muted"><?= ucfirst($job['status']) ?></span>
-                        <?php endif; ?>
+                        <form method="POST" style="display:inline-block;">
+                            <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form method="POST" style="display:inline-block;">
+                            <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
