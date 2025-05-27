@@ -51,16 +51,16 @@ try {
 <div class="layout-container">
     <div class="sidebar">
         <ul>
-            <li class="active"><a href="approve_job.php">Approval Job List</a></li>
-            <li><a href="adapp.php">Appointment</a></li>
+            <li><a href="approve_job.php">Approval Job List</a></li>
+            <li class="active"><a href="adapp.php">Appointment</a></li>
             <li><a href="addash.php">Admin Dashboard</a></li>
             <li><a href="adme.php">Messages</a></li>
         </ul>
     </div>
 
     <div class="main-content">
-        <h2>Admin Approval</h2>
-        <p>Approve or reject job postings and manage interview appointments.</p>
+        <h2>Admin Appointment</h2>
+        <p>Manage interview appointments.</p>
 
         <table class="table table-bordered mt-4">
             <thead class="table-light">
