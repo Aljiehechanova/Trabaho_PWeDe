@@ -49,22 +49,35 @@ try {
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/clientlist.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="clientD.php">
-            <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
-            <span class="fw-bold">TrabahoPWeDe</span>
-        </a>
-        <div class="ms-auto d-flex align-items-center">
-            <a href="clientP.php" class="d-flex align-items-center text-decoration-none me-3">
-                <img src="<?= htmlspecialchars($client['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
-                <span class="fw-semibold text-dark"><?= htmlspecialchars($client['fullname']) ?></span>
-            </a>
-        </div>
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="clientD.php">
+      <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
+      <span class="fw-bold">TrabahoPWeDe</span>
+    </a>
+    <div class="ms-auto d-flex align-items-center">
+      <a href="clientP.php" class="d-flex align-items-center text-decoration-none me-3">
+        <img src="<?= htmlspecialchars($client['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
+        <span class="fw-semibold text-dark"><?= htmlspecialchars($client['fullname']) ?></span>
+      </a>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          Settings
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsMenu">
+          <li><a class="dropdown-item" href="userP.php">Edit Profile</a></li>
+          <li><a class="dropdown-item" href="#">Change Password</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 </nav>
 
 <div class="layout-container">
@@ -72,7 +85,7 @@ try {
         <ul>
             <li><a href="clientL.php">View Job List</a></li>
             <li><a href="clientW.php">View Workshop Volunteer</a></li>
-            <li class="active"><a href="#">View List of Applicants</a></li>
+            <li class="active"><a href="listofapplicant.php">View List of Applicants</a></li>
             <li><a href="posting.php">Posting</a></li>
             <li><a href="clientD.php">Analytic Dashboard</a></li>
             <li><a href="clientM.php">Inbox</a></li>

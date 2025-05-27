@@ -73,6 +73,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <ul>
       <li><a href="clientL.php">View Job List</a></li>
       <li><a href="clientW.php">View Workshop Volunteer</a></li>
+      <li><a href="listofapplicant.php">View List of Applicants</a></li>
       <li><a href="posting.php">Posting</a></li>
       <li><a href="clientD.php">Analytic Dashboard</a></li>
       <li class="active"><a href="clientM.php">Inbox</a></li>
