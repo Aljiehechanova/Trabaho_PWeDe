@@ -10,8 +10,8 @@ if (!isset($_GET['job_id'])) {
 $jobId = intval($_GET['job_id']);
 
 try {
-    // Get the disability requirement for the job
-    $stmt = $conn->prepare("SELECT disability_requirement FROM jobpost WHERE jobpost_id = :job_id");
+    // Check if job exists
+    $stmt = $conn->prepare("SELECT jobpost_id, jobpost_title FROM jobpost WHERE jobpost_id = :job_id");
     $stmt->bindParam(':job_id', $jobId);
     $stmt->execute();
     $job = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,15 +21,19 @@ try {
         exit;
     }
 
-    $disabilityRequirement = $job['disability_requirement'];
-
-    $stmt = $conn->prepare("SELECT user_id, fullname, email, disability, resume FROM users WHERE disability = :disability");
-    $stmt->bindParam(':disability', $disabilityRequirement);
+    // Get users who applied to this job
+    $stmt = $conn->prepare("
+        SELECT u.user_id, u.fullname, u.email, u.disability, u.resume 
+        FROM apply a
+        INNER JOIN users u ON a.user_id = u.user_id
+        WHERE a.jobpost_id = :job_id
+    ");
+    $stmt->bindParam(':job_id', $jobId);
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($users)) {
-        echo "<p>No matching applicants found.</p>";
+        echo "<p>No applicants have applied for this job yet.</p>";
     } else {
         // Styles for layout
         echo "<style>
@@ -80,7 +84,6 @@ try {
             echo "<button type='submit' name='action' value='onhold' class='btn btn-warning btn-sm'>On Hold</button>";
             echo "</form>";
 
-            // ✅ Show the View Resume button only if resume path exists
             if (!empty($user['resume'])) {
                 $resumePath = htmlspecialchars($user['resume']);
                 echo "<a href='../../$resumePath' target='_blank' class='btn btn-success btn-sm mt-2'>View Resume</a>";

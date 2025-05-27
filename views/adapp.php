@@ -90,16 +90,62 @@ try {
 <div class="layout-container">
 <div class="sidebar">
         <ul>
-            <li class="active"><a href="adapp.php">Approval Job List</a></li>
-            <li><a href="appoint.php">Appointment</a></li>
+            <li><a href="approve_job.php">Approval Job List</a></li>
+            <li class="active"><a href="adapp.php">Appointment</a></li>
             <li><a href="addash.php">Admin Dashboard</a></li>
             <li><a href="adme.php">Messages</a></li>
         </ul>
     </div>
     <div class="main-content">
-        <h2>Admin Approval</h2>
-        <p>Approve or reject job postings and appointments.</p>
-    </div>
-    </div>
+    <h2>Admin Approval</h2>
+    <p>Approve or reject job postings and manage interview appointments.</p>
+
+    <table class="table table-bordered mt-4">
+        <thead class="table-light">
+            <tr>
+                <th>Job Title</th>
+                <th>Disability Requirement</th>
+                <th>Required Skills</th>
+                <th>Appointment</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($jobs as $job): ?>
+            <?php
+            // Fetch appointment info for each job
+            $stmt = $conn->prepare("SELECT * FROM job_appointments WHERE jobpost_id = ?");
+            $stmt->execute([$job['jobpost_id']]);
+            $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+            ?>
+            <tr>
+                <td><?= htmlspecialchars($job['jobpost_title']) ?></td>
+                <td><?= htmlspecialchars($job['disability_requirement']) ?></td>
+                <td><?= htmlspecialchars($job['skills_requirement']) ?></td>
+                <td>
+                    <?php if ($appointment): ?>
+                        <?= htmlspecialchars($appointment['appointment_date'] ?? 'N/A') ?> 
+                        <?= htmlspecialchars($appointment['appointment_time'] ?? '') ?>
+                    <?php else: ?>
+                        <em>No appointment</em>
+                    <?php endif; ?>
+                </td>
+                <td><?= $appointment['status'] ?? 'Pending' ?></td>
+                <td>
+                    <form action="approve_job.php" method="POST" style="display:inline-block;">
+                        <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                        <button class="btn btn-success btn-sm" name="action" value="approve">Approve</button>
+                    </form>
+                    <form action="approve_job.php" method="POST" style="display:inline-block;">
+                        <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                        <button class="btn btn-danger btn-sm" name="action" value="reject">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

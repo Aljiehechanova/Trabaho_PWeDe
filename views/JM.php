@@ -195,19 +195,25 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if (!empty($jobs)) : ?>
           <?php foreach ($jobs as $job) : ?>
             <div class="job-card">
-              <h3><?= htmlspecialchars($job['jobpost_title']) ?></h3>
-              <p><strong>Disability Requirement:</strong> <?= htmlspecialchars($job['disability_requirement']) ?></p>
-              <p><strong>Skills Requirement:</strong> <?= htmlspecialchars($job['skills_requirement']) ?></p>
-              <button class="btn btn-primary view-details-btn" data-id="<?= $job['jobpost_id'] ?>">View Details</button>
-            </div>
+                <h3><?= htmlspecialchars($job['jobpost_title']) ?></h3>
+                <p><strong>Disability Requirement:</strong> <?= htmlspecialchars($job['disability_requirement']) ?></p>
+                <p><strong>Skills Requirement:</strong> <?= htmlspecialchars($job['skills_requirement']) ?></p>
+                <button class="btn btn-primary view-details-btn" data-id="<?= $job['jobpost_id'] ?>">View Details</button>
+                <form method="POST" action="apply_job.php" class="d-inline">
+                  <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                  <button type="submit" class="btn btn-success">Apply</button>
+                </form>
+              </div>
           <?php endforeach; ?>
         <?php else : ?>
           <p>No recommended jobs found based on current filters.</p>
         <?php endif; ?>
       </div>
+      
     </div>
   </div>
 </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="jobDetailsModal" tabindex="-1" aria-labelledby="jobDetailsModalLabel" aria-hidden="true">

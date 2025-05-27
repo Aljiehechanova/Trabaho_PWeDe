@@ -1,14 +1,12 @@
 <?php
 session_start();
 
-// Check if logged in
 if (!isset($_SESSION['user_id'])) {
     die("Unauthorized access.");
 }
 
 $user_id = $_SESSION['user_id'];
 
-// Database Connection
 try {
     $db = new PDO("mysql:host=localhost;dbname=trabahopwede", "root", "");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -49,6 +47,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ':yearsExperience' => $yearsExperience,
             ':user_id' => $user_id
         ]);
+
+        $jobpost_id = $db->lastInsertId();
+
+        // Insert into job_appointments table
+        $appointmentStmt = $db->prepare("INSERT INTO job_appointments (jobpost_id) VALUES (:jobpost_id)");
+        $appointmentStmt->execute([':jobpost_id' => $jobpost_id]);
 
         header("Location: posting.php");
         exit();

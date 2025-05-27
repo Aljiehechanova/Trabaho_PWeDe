@@ -9,14 +9,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $client_id = $_SESSION['user_id'];
 
-// Optional: Enforce that only clients can access this page
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'client') {
     die("Access denied: Only clients can access this page.");
 }
 
 try {
-    // ✅ Fix: Changed client_id to user_id
-    $stmt = $conn->prepare("SELECT * FROM jobpost WHERE user_id = ?");
+    // Only show approved job posts
+    $stmt = $conn->prepare("SELECT * FROM jobpost WHERE user_id = ? AND status = 'approve'");
     $stmt->execute([$client_id]);
     $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -89,7 +88,7 @@ try {
     </div>
 
     <div class="main-content">
-        <h1>Posted Jobs</h1>
+        <h1>Approved Job Posts</h1>
 
         <?php if (!empty($jobs)): ?>
             <?php foreach ($jobs as $job): ?>
@@ -98,11 +97,19 @@ try {
                     <p><strong>Disability Type:</strong> <?= htmlspecialchars($job['disability_requirement']) ?></p>
                     <p><strong>Required Skills:</strong> <?= htmlspecialchars($job['skills_requirement']) ?></p>
                     <p><strong>Optional Skills:</strong> <?= htmlspecialchars($job['optional_skills'] ?? 'N/A') ?></p>
-                    <button class="match-btn" onclick="viewMatches(<?= $job['jobpost_id'] ?>)">View Matching Applicants</button>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-primary" onclick="viewMatches(<?= $job['jobpost_id'] ?>)">View Matching Applicants</button>
+
+                        <form method="POST" action="remove_job.php" onsubmit="return confirm('Are you sure you want to delete this job post?');">
+                            <input type="hidden" name="jobpost_id" value="<?= $job['jobpost_id'] ?>">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </div>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>No job posts found.</p>
+            <p>No approved job posts found.</p>
         <?php endif; ?>
     </div>
 
@@ -110,8 +117,7 @@ try {
     <div id="matchingModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="modal-body">
-            </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 </div>

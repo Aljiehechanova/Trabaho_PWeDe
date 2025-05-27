@@ -92,8 +92,8 @@ try {
 </nav>
     <div class="sidebar">
         <ul>
-            <li><a href="adapp.php">Approval Job List</a></li>
-            <li><a href="appoint.php">Appointment</a></li>
+        <li><a href="approve_job.php">Approval Job List</a></li>
+            <li><a href="adapp.php">Appointment</a></li>
             <li class="active"><a href="addash.php">Admin Dashboard</a></li>
             <li><a href="adme.php">Messages</a></li>
         </ul>
