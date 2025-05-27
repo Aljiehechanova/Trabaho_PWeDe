@@ -65,7 +65,7 @@ class UserModel
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->conn->prepare("
-            INSERT INTO users (user_type, fullname, email, password, disability_type)
+            INSERT INTO users (user_type, fullname, email, password, disability)
             VALUES (?, ?, ?, ?, ?)
         ");
         return $stmt->execute([$user_type, $fullname, $email, $hashedPassword, $disability]);
