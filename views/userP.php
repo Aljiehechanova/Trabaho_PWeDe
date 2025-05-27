@@ -2,7 +2,6 @@
 session_start();
 include '../config/db_connection.php';
 
-
 if (!isset($_SESSION['user_id'])) {
     die("Unauthorized access.");
 }
@@ -47,60 +46,10 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="UserD.php">
-      <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
-      <span class="fw-bold">Trabaho</span><span class="fw-bold" style="color: blue">PWeDe</span>
-    </a>
-
-    <div class="ms-auto d-flex align-items-center">
-      <div class="dropdown me-3">
-        <button class="btn btn-light position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-bell fs-5"></i>
-          <?php if (!empty($notifications)): ?>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              <?= count($notifications) ?>
-            </span>
-          <?php endif; ?>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="width: 300px;">
-          <?php if (!empty($notifications)): ?>
-            <?php foreach ($notifications as $notif): ?>
-              <li class="px-3 py-2 border-bottom">
-                <small class="text-muted"><?= htmlspecialchars($notif['created_at']) ?></small><br>
-                <?= htmlspecialchars($notif['message']) ?>
-              </li>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <li class="dropdown-item text-muted">No new notifications</li>
-          <?php endif; ?>
-        </ul>
-      </div>
-
-      <a href="userP.php" class="d-flex align-items-center text-decoration-none me-3">
-        <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
-        <span class="fw-semibold text-dark"><?= htmlspecialchars($user['fullname']) ?></span>
-      </a>
-
-      <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
-          Settings
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsMenu">
-          <li><a class="dropdown-item" href="userP.php">Edit Profile</a></li>
-          <li><a class="dropdown-item" href="#">Change Password</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</nav>
 
 <div class="container mt-5">
     <div class="mb-3">
-      <a href="UserD.php" class="btn btn-outline-primary">&larr; Go to Dashboard</a>
+        <a href="UserD.php" class="btn btn-outline-primary">&larr; Go to Dashboard</a>
     </div>
     <div class="profile-card text-center">
         <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile Picture" onerror="this.onerror=null;this.src='../assets/images/alterprofile.png';" class="profile-img" data-bs-toggle="modal" data-bs-target="#editPhotoModal">
@@ -110,107 +59,55 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
         <p><strong>Description:</strong> <?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
         <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
+
         <div class="d-flex justify-content-center gap-2 mt-3">
-          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
-          <?php if (!empty($user['resume'])): ?>
-              <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#resumeModal">View Resume</button>
-              <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="resumeModalLabel">View Resume</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+
+            <?php if (!empty($user['resume'])): ?>
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#resumeModal">View Resume</button>
+
+                <!-- Resume Modal -->
+                <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resumeModalLabel">View Resume</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <?php
+                                    $resumePath = "../" . htmlspecialchars($user['resume']);
+                                    $ext = strtolower(pathinfo($resumePath, PATHINFO_EXTENSION));
+
+                                    if (file_exists($resumePath)) {
+                                        if (in_array($ext, ['pdf', 'html', 'htm'])) {
+                                            echo "<iframe id='resumeFrame' src='$resumePath' width='100%' height='600px' style='border: none;'></iframe>";
+                                        } else {
+                                            echo "<p>Unsupported resume format. <a href='$resumePath' download>Download it here</a>.</p>";
+                                        }
+                                    } else {
+                                        echo "<p class='text-danger'>Resume file not found. Please regenerate it.</p>";
+                                    }
+                                ?>
+                            </div>
+                            <div class="modal-footer">
+                                <?php if (file_exists($resumePath)): ?>
+                                    <a href="<?= $resumePath ?>" class="btn btn-success" download>Download</a>
+                                    <button type="button" class="btn btn-primary" onclick="printResume()">Print</button>
+                                <?php endif; ?>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                      <?php
-                        $resumePath = "../" . htmlspecialchars($user['resume']);
-                        $ext = strtolower(pathinfo($resumePath, PATHINFO_EXTENSION));
-                        if ($ext === 'pdf') {
-                            echo "<iframe id='resumeFrame' src='$resumePath' width='100%' height='600px' style='border: none;'></iframe>";
-                        } else {
-                            echo "<p>Resume format not supported for preview. <a href='$resumePath' download>Download it here</a>.</p>";
-                        }
-                      ?>
-                    </div>
-                    <div class="modal-footer">
-                      <a href="<?= $resumePath ?>" class="btn btn-success" download>Download</a>
-                      <button type="button" class="btn btn-primary" onclick="printResume()">Print</button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                  </div>
                 </div>
-              </div>
-          <?php endif; ?> 
-        </div>          
+            <?php else: ?>
+                <p class="text-muted mt-3">You have not generated a resume yet.</p>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="editProfileModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <form action="update_profile.php" method="POST" class="modal-content">
-      <div class="modal-header">
-        <h5>Edit Profile</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <div class="mb-3">
-          <label for="fullname" class="form-label">Full Name</label>
-          <input type="text" class="form-control" id="fullname" name="fullname" value="<?= htmlspecialchars($user['fullname']) ?>" required>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-        </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <textarea class="form-control" id="description" name="description" rows="3"><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="location" class="form-label">Location</label>
-          <input type="text" class="form-control" id="location" name="location" value="<?= htmlspecialchars($user['location'] ?? '') ?>">
-        </div>
-        <div class="mb-3">
-          <label for="disability" class="form-label">Disability</label>
-          <input type="text" class="form-control" id="disability" name="disability" value="<?= htmlspecialchars($user['disability'] ?? '') ?>">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="modal fade" id="editPhotoModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <form action="upload_photo.php" method="POST" enctype="multipart/form-data" class="modal-content">
-      <div class="modal-header">
-        <h5>Edit Profile Picture</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body text-center">
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <div class="mb-3">
-          <label for="profile_photo" class="form-label">Upload a photo</label>
-          <input type="file" class="form-control" id="profile_photo" name="profile_photo" accept="image/*">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Or take a photo</label><br>
-          <video id="video" width="100%" autoplay></video>
-          <canvas id="canvas" style="display:none;"></canvas>
-          <input type="hidden" name="webcam_image" id="webcam_image">
-          <button type="button" class="btn btn-outline-primary mt-2" onclick="capture()">Capture</button>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Save Photo</button>
-      </div>
-    </form>
-  </div>
-</div>
-
+<!-- Webcam and Print Scripts -->
 <script>
 function capture() {
     const canvas = document.getElementById('canvas');
@@ -221,21 +118,18 @@ function capture() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     canvas.style.display = 'block';
     video.style.display = 'none';
-    const dataURL = canvas.toDataURL('image/png');
-    document.getElementById('webcam_image').value = dataURL;
+    document.getElementById('webcam_image').value = canvas.toDataURL('image/png');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('video');
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (navigator.mediaDevices?.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
                 video.play();
             })
-            .catch(error => {
-                console.warn("Webcam access denied or not available:", error);
-            });
+            .catch(error => console.warn("Webcam access denied or not available:", error));
     }
 });
 
@@ -249,5 +143,6 @@ function printResume() {
     }
 }
 </script>
+
 </body>
 </html>

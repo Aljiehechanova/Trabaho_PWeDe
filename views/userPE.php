@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 require '../config/db_connection.php';
 
@@ -21,7 +21,7 @@ try {
 
     $loggedInEmail = $user['email'];
 
-    // Fetch user messages
+    // Fetch messages
     $stmt = $conn->prepare("
         SELECT m.sender_email, m.subject, m.message 
         FROM messages m
@@ -34,7 +34,7 @@ try {
     die("User fetch error: " . $e->getMessage());
 }
 
-// Handle resume upload
+// Resume upload handling
 $uploadStatus = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['resume'])) {
     $uploadDir = '../uploads/resumes/';
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['resume'])) {
     }
 }
 
-// Fetch workshops
+// Workshops
 try {
     $stmt = $conn->query("SELECT work_title, entry_date, end_date, location, hostname FROM workshop ORDER BY entry_date DESC");
     $workshops = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -76,11 +76,12 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Fetch notifications
+// Notifications
 $notif_stmt = $conn->prepare("SELECT message, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
 $notif_stmt->execute([$user_id]);
 $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,10 +102,8 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
       <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Logo" width="40" height="40" class="me-2">
       <span class="fw-bold">Trabaho</span><span class="fw-bold" style="color: blue">PWeDe</span>
     </a>
-
     <div class="ms-auto d-flex align-items-center">
-
-      <!-- Notification bell -->
+      <!-- Notifications -->
       <div class="dropdown me-3">
         <button class="btn btn-light position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-bell fs-5"></i>
@@ -115,84 +114,89 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endif; ?>
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="width: 300px;">
-          <?php if (!empty($notifications)): ?>
-            <?php foreach ($notifications as $notif): ?>
-              <li class="px-3 py-2 border-bottom">
-                <small class="text-muted"><?= htmlspecialchars($notif['created_at']) ?></small><br>
-                <?= htmlspecialchars($notif['message']) ?>
-              </li>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <li class="dropdown-item text-muted">No new notifications</li>
-          <?php endif; ?>
+          <?php foreach ($notifications as $notif): ?>
+            <li class="px-3 py-2 border-bottom">
+              <small class="text-muted"><?= htmlspecialchars($notif['created_at']) ?></small><br>
+              <?= htmlspecialchars($notif['message']) ?>
+            </li>
+          <?php endforeach; ?>
         </ul>
       </div>
 
-      <!-- Profile and settings -->
+      <!-- Profile & Settings -->
       <a href="userP.php" class="d-flex align-items-center text-decoration-none me-3">
         <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 10px;">
         <span class="fw-semibold text-dark"><?= htmlspecialchars($user['fullname']) ?></span>
       </a>
-
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="settingsMenu" data-bs-toggle="dropdown">
           Settings
         </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsMenu">
+        <ul class="dropdown-menu dropdown-menu-end">
           <li><a class="dropdown-item" href="userP.php">Edit Profile</a></li>
           <li><a class="dropdown-item" href="#">Change Password</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" href="login.php">Logout</a></li>
         </ul>
       </div>
-
     </div>
   </div>
 </nav>
+
 <div class="layout-container">
-<div class="sidebar">
+  <div class="sidebar">
     <ul>
         <li class="active"><a href="userPE.php">Profile Enhancer</a></li>
         <li><a href="JM.php">Job Matching</a></li>
         <li><a href="userD.php">Analytic Dashboard</a></li>
         <li><a href="userM.php">Inbox</a></li>
     </ul>
-</div>
+  </div>
 
-    <div class="main-content">
-        <?php if (!empty($_SESSION['message'])): ?>
-            <div class="alert alert-info"><?= htmlspecialchars($_SESSION['message']) ?></div>
-            <?php unset($_SESSION['message']); ?>
-        <?php endif; ?>
+  <div class="main-content">
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="userPE.php" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Builder
+        </a>
+    </div>
 
-        <div class="action-buttons mb-3">
-            <button onclick="location.href='RG.php'">Resume Builder</button>
-            <button onclick="openModal()">Upload Resume</button>
+    <!-- Messages -->
+    <?php if (!empty($_SESSION['message'])): ?>
+        <div class="alert alert-info"><?= htmlspecialchars($_SESSION['message']) ?></div>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
+
+    <!-- Actions -->
+    <div class="action-buttons mb-3">
+        <button onclick="location.href='RG.php'" class="btn btn-primary">Resume Builder</button>
+        <button onclick="openModal()" class="btn btn-secondary">Upload Resume</button>
+    </div>
+
+    <?php if (!empty($uploadStatus)): ?>
+        <div class="alert alert-info"><?= htmlspecialchars($uploadStatus) ?></div>
+    <?php endif; ?>
+
+    <!-- Resume -->
+    <?php if (!empty($user['resume'])): ?>
+        <div class="mb-4">
+            <h5>Current Resume:</h5>
+            <a href="../<?= htmlspecialchars($user['resume']) ?>" target="_blank" class="btn btn-sm btn-primary">View Resume</a>
+            <a href="../<?= htmlspecialchars($user['resume']) ?>" download class="btn btn-sm btn-success">Download</a>
+            <button class="btn btn-sm btn-secondary" onclick="printResume()">Print</button>
         </div>
+    <?php endif; ?>
 
-        <?php if (!empty($uploadStatus)): ?>
-            <div class="alert alert-info"><?= htmlspecialchars($uploadStatus) ?></div>
-        <?php endif; ?>
-
-        <?php if (!empty($user['resume'])): ?>
-            <div class="mb-4">
-                <h5>Current Resume:</h5>
-                <a href="../<?= htmlspecialchars($user['resume']) ?>" target="_blank" class="btn btn-sm btn-primary">View Resume</a>
-                <a href="../<?= htmlspecialchars($user['resume']) ?>" download class="btn btn-sm btn-success">Download</a>
-                <button class="btn btn-sm btn-secondary" onclick="printResume()">Print</button>
-            </div>
-        <?php endif; ?>
-
-        <div class="workshop-list">
-            <h2>List of Workshops</h2>
-            <?php if (!empty($workshops)): ?>
+    <!-- Workshops -->
+    <div class="workshop-list">
+        <h2>List of Workshops</h2>
+        <?php if (!empty($workshops)): ?>
             <?php foreach ($workshops as $workshop): ?>
                 <div class="workshop-item mb-3 p-3 border rounded bg-light">
                     <h4><?= htmlspecialchars($workshop['work_title']) ?></h4>
                     <small><?= date('F j, Y', strtotime($workshop['entry_date'])) ?> to <?= date('F j, Y', strtotime($workshop['end_date'])) ?> — <?= htmlspecialchars($workshop['location']) ?></small>
                     <div><strong>Host:</strong> <?= htmlspecialchars($workshop['hostname']) ?></div>
-
-                    <form method="POST" action="volunteer_handler.php" class="mt-2" onsubmit="return confirmVolunteer('<?= $user_id ?>')">
+                    <form method="POST" action="volunteer_handler.php" class="mt-2" onsubmit="return confirmVolunteer()">
                         <input type="hidden" name="work_title" value="<?= htmlspecialchars($workshop['work_title']) ?>">
                         <input type="hidden" name="entry_date" value="<?= htmlspecialchars($workshop['entry_date']) ?>">
                         <input type="hidden" name="host" value="<?= htmlspecialchars($workshop['hostname']) ?>">
@@ -200,24 +204,26 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </form>
                 </div>
             <?php endforeach; ?>
-            <?php else: ?>
-                <p>No workshops found.</p>
-            <?php endif; ?>
-        </div>
+        <?php else: ?>
+            <p>No workshops found.</p>
+        <?php endif; ?>
     </div>
-</div>
-<!-- Resume Upload Modal -->
-<div id="resumeModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3>Upload Your Resume</h3>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="resume" accept=".pdf,.doc,.docx" required>
-            <button type="submit" class="btn btn-primary mt-2">Upload</button>
-        </form>
-    </div>
+  </div>
 </div>
 
+<!-- Resume Upload Modal -->
+<div id="resumeModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h3>Upload Your Resume</h3>
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="resume" accept=".pdf,.doc,.docx" required>
+      <button type="submit" class="btn btn-primary mt-2">Upload</button>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
 <script>
 function openModal() {
     document.getElementById("resumeModal").style.display = "flex";
@@ -230,7 +236,7 @@ function printResume() {
     win.focus();
     win.onload = () => win.print();
 }
-function confirmVolunteer(userId) {
+function confirmVolunteer() {
     return confirm("Are you sure you want to volunteer?");
 }
 </script>

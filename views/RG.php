@@ -125,20 +125,6 @@
                     </div>
                 </div>
 
-                <!-- Projects -->
-                <div class="section">
-                    <h2><i class="fas fa-project-diagram"></i> Projects</h2>
-                    <div id="projectFields">
-                        <div class="project-entry">
-                            <input type="text" name="project_name[]" placeholder="Project Name" required>
-                            <input type="text" name="project_url[]" placeholder="Project URL (optional)">
-                            <textarea name="project_description[]" placeholder="Project Description" required></textarea>
-                        </div>
-                    </div>
-                    <button type="button" class="add-btn" onclick="addProject()">
-                        <i class="fas fa-plus"></i> Add More Projects
-                    </button>
-                </div>
 
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-file-export"></i> Generate Resume

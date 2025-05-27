@@ -9,13 +9,20 @@ if (!isset($_SESSION['user_id'])) {
 
 $client_id = $_SESSION['user_id'];
 
+// Optional: Enforce that only clients can access this page
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'client') {
+    die("Access denied: Only clients can access this page.");
+}
+
 try {
-    $stmt = $conn->prepare("SELECT * FROM jobpost");
-    $stmt->execute();
+    // ✅ Fix: Changed client_id to user_id
+    $stmt = $conn->prepare("SELECT * FROM jobpost WHERE user_id = ?");
+    $stmt->execute([$client_id]);
     $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
+
 try {
     $stmt = $conn->prepare("SELECT fullname, img FROM users WHERE user_id = ?");
     $stmt->execute([$client_id]);
@@ -34,7 +41,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client List</title>
+    <title>Client Job List</title>
     <link rel="stylesheet" href="../assets/css/dashboardstyle.css">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/clientlist.css">
@@ -68,11 +75,13 @@ try {
     </div>
   </div>
 </nav>
+
 <div class="layout-container">
     <div class="sidebar">
         <ul>
             <li class="active"><a href="clientL.php">View Job List</a></li>
             <li><a href="clientW.php">View Workshop Volunteer</a></li>
+            <li><a href="listofapplicant.php">View List of Applicants</a></li>
             <li><a href="posting.php">Posting</a></li>
             <li><a href="clientD.php">Analytic Dashboard</a></li>
             <li><a href="clientM.php">Inbox</a></li>
@@ -106,6 +115,7 @@ try {
         </div>
     </div>
 </div>
+
 <script>
 function viewMatches(jobId) {
     fetch(`fmu.php?job_id=${jobId}`)
