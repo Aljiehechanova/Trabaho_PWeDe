@@ -1,50 +1,56 @@
 <?php
 require_once '../config/db_connection.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userId = $_POST['user_id'] ?? null;
-    $jobId = $_POST['job_id'] ?? null;
-    $action = $_POST['action'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    exit("Invalid request method.");
+}
 
-    if (!$userId || !$jobId || !$action) {
-        die("Missing required data.");
-    }
+// Validate inputs
+$userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;
+$jobId = isset($_POST['job_id']) ? intval($_POST['job_id']) : null;
+$action = $_POST['action'] ?? null;
 
-    // Determine status and message
-    $status = '';
-    $message = '';
+if (!$userId || !$jobId || !$action) {
+    exit("Error: Missing required data (user_id, job_id, action).");
+}
 
-    if ($action === 'hire') {
-        $status = 'Hired';
-        $message = 'Congratulations! You have been hired for a job you matched with.';
-    } elseif ($action === 'onhold') {
-        $status = 'On Hold';
-        $message = 'Your application is on hold for a job you matched with.';
+// Determine status and message
+$statusMap = [
+    'hire' => ['Hired', 'Congratulations! You have been hired for a job you matched with.'],
+    'onhold' => ['On Hold', 'Your application is on hold for a job you matched with.'],
+];
+
+if (!isset($statusMap[$action])) {
+    exit("Error: Invalid action.");
+}
+
+$status = $statusMap[$action][0];
+$message = $statusMap[$action][1];
+
+try {
+    // Check if the jobstage already exists
+    $stmt = $conn->prepare("SELECT 1 FROM jobstages WHERE user_id = ? AND job_id = ?");
+    $stmt->execute([$userId, $jobId]);
+
+    if ($stmt->fetchColumn()) {
+        // Update existing jobstage
+        $stmt = $conn->prepare("UPDATE jobstages SET status = ?, date_updated = NOW() WHERE user_id = ? AND job_id = ?");
+        $stmt->execute([$status, $userId, $jobId]);
     } else {
-        die("Invalid action.");
+        // Insert new jobstage
+        $stmt = $conn->prepare("INSERT INTO jobstages (user_id, job_id, status) VALUES (?, ?, ?)");
+        $stmt->execute([$userId, $jobId, $status]);
     }
 
-    try {
-        // Insert or update application
-        $stmt = $conn->prepare("SELECT * FROM applications WHERE applicant_id = ? AND job_id = ?");
-        $stmt->execute([$userId, $jobId]);
+    // Insert notification
+    $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, created_at) VALUES (?, ?, NOW())");
+    $stmt->execute([$userId, $message]);
 
-        if ($stmt->rowCount() > 0) {
-            $stmt = $conn->prepare("UPDATE applications SET status = ? WHERE applicant_id = ? AND job_id = ?");
-            $stmt->execute([$status, $userId, $jobId]);
-        } else {
-            $stmt = $conn->prepare("INSERT INTO applications (applicant_id, job_id, status) VALUES (?, ?, ?)");
-            $stmt->execute([$userId, $jobId, $status]);
-        }
+    echo "<p>Status updated to <strong>$status</strong>. Notification sent.</p>";
+    echo "<script>setTimeout(() => window.location.href = document.referrer || 'listofapplicant.php', 1500);</script>";
 
-        // Send notification
-        $stmt = $conn->prepare("INSERT INTO notifications (user_id, message) VALUES (?, ?)");
-        $stmt->execute([$userId, $message]);
-
-        echo "<p>Status updated to <strong>$status</strong>. Notification sent.</p>";
-        echo "<script>setTimeout(() => window.history.back(), 1500);</script>";
-
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo "Database Error: " . htmlspecialchars($e->getMessage());
 }

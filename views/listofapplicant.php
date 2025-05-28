@@ -23,14 +23,14 @@ try {
     die("Client fetch error: " . $e->getMessage());
 }
 
-// Fetch all Hired and on-hold applicants for this client
+// Fetch all On-Hold applicants for this client
 try {
     $stmt = $conn->prepare("
         SELECT js.job_id, jp.jobpost_title, u.user_id, u.fullname, u.img, js.status 
         FROM jobstages js
         JOIN users u ON js.user_id = u.user_id
         JOIN jobpost jp ON js.job_id = jp.jobpost_id
-        WHERE jp.user_id = ? AND js.status IN ('Hired', 'on-hold')
+        WHERE jp.user_id = ? AND js.status = 'On Hold'
         ORDER BY js.date_updated DESC
     ");
     $stmt->execute([$client_id]);
@@ -50,7 +50,6 @@ try {
     <link rel="stylesheet" href="../assets/css/clientlist.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -93,7 +92,7 @@ try {
     </div>
 
     <div class="main-content">
-        <h1>All Applicants (Hired & On-Hold)</h1>
+        <h1>Applicants On-Hold</h1>
 
         <?php if (!empty($applicants)): ?>
             <?php foreach ($applicants as $applicant): ?>
@@ -102,20 +101,24 @@ try {
                         <img src="<?= htmlspecialchars($applicant['img']) ?>" alt="Profile" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
                         <div>
                             <h5 class="mb-1"><?= htmlspecialchars($applicant['fullname']) ?></h5>
-                            <p class="mb-0"><strong>Job Title:</strong> <?= htmlspecialchars($applicant['jobpost_title']) ?>)</p>
-                            <p class="mb-0"><strong>Status:</strong> 
-                                <?= htmlspecialchars($applicant['status'] === 'on-hold' ? 'On Hold' : $applicant['status']) ?>
-                            </p>
+                            <p class="mb-0"><strong>Job Title:</strong> <?= htmlspecialchars($applicant['jobpost_title']) ?></p>
+                            <p class="mb-0"><strong>Status:</strong> <?= htmlspecialchars($applicant['status']) ?></p>
                         </div>
                     </div>
+                    <form method="POST" action="hire_user.php" class="ms-3">
+                            <input type="hidden" name="user_id" value="<?= $applicant['user_id'] ?>">
+                            <input type="hidden" name="job_id" value="<?= $applicant['job_id'] ?>">
+                            <input type="hidden" name="action" value="hire">
+                            <button type="submit" class="btn btn-success">Hire</button>
+                        </form>
+
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>No hired or on-hold applicants found.</p>
+            <p>No applicants currently on hold.</p>
         <?php endif; ?>
     </div>
 </div>
 
 </body>
 </html>
-    

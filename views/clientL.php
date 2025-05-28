@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'client') {
 
 try {
     // Only show approved job posts
-    $stmt = $conn->prepare("SELECT * FROM jobpost WHERE user_id = ? AND status = 'approve'");
+    $stmt = $conn->prepare("SELECT * FROM jobpost WHERE user_id = ? AND status = 'approved'");
     $stmt->execute([$client_id]);
     $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {

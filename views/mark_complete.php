@@ -16,10 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_id'])) {
         $stmt = $conn->prepare("UPDATE job_appointments SET status = 'Completed' WHERE appointment_id = ?");
         $stmt->execute([$appointment_id]);
 
-        // Update the jobpost status to approved
-        $stmt = $conn->prepare("UPDATE jobpost SET status = 'Approved' WHERE jobpost_id = ?");
-        $stmt->execute([$jobpost_id]);
-
         // ✅ Redirect to the correct page
         header("Location: adapp.php");
         exit;

@@ -1,3 +1,23 @@
+<?php
+session_start();
+require_once '../config/db_connection.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+try {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("User fetch error: " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,10 +63,14 @@
                 <div class="section">
                     <h2><i class="fas fa-user"></i> Personal Information</h2>
                     <div class="photo-upload">
-                        <div class="photo-preview" id="photoPreview">
+                    <div class="photo-preview" id="photoPreview">
+                        <?php if (!empty($user['img'])): ?>
+                            <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile Photo">
+                        <?php else: ?>
                             <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="upload-btn-wrapper">
+                        <?php endif; ?>
+                    </div>
+                                            <div class="upload-btn-wrapper">
                             <button class="upload-btn" type="button">
                                 <i class="fas fa-camera"></i> Choose Photo
                             </button>
@@ -55,19 +79,19 @@
                         <small class="photo-hint">Recommended size: 400x400px</small>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="fullName" placeholder="Full Name" required>
+                        <input type="text" name="fullName" placeholder="Full Name" value="<?= htmlspecialchars($user['fullname']) ?>" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="email" name="email" placeholder="Email" value="<?= htmlspecialchars($user['email']) ?>" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" name="phone" placeholder="Phone Number" required>
+                        <input type="tel" name="phone" placeholder="Phone Number" value="<?= htmlspecialchars($user['contact_number']) ?>" required>
                     </div>
                     <div class="form-group">
-                        <textarea name="address" placeholder="Address" required></textarea>
+                        <textarea name="address" placeholder="Address" required><?= htmlspecialchars($user['location']) ?></textarea>
                     </div>
                     <div class="form-group">
-                        <textarea name="summary" placeholder="Professional Summary" required></textarea>
+                        <textarea name="summary" placeholder="Professional Summary" required><?= htmlspecialchars($user['description']) ?></textarea>
                     </div>
                 </div>
 
