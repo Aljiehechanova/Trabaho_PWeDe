@@ -16,6 +16,24 @@ try {
         die("User not found.");
     }
 
+    // Required fields (resume is optional)
+    $requiredFields = ['fullname', 'location', 'disability', 'contact'];
+    $missingFields = [];
+
+    foreach ($requiredFields as $field) {
+        if (empty($user[$field])) {
+            $missingFields[] = $field;
+        }
+    }
+
+    if (!empty($missingFields)) {
+        echo "<script>
+            alert('Please complete your profile before accessing this page. Missing: " . implode(', ', $missingFields) . "');
+            window.location.href = 'edit_profile.php';
+        </script>";
+        exit;
+    }
+
     $loggedInEmail = $user['email'];
 
     $stmt = $conn->prepare("
@@ -34,6 +52,7 @@ $notif_stmt = $conn->prepare("SELECT message, created_at FROM notifications WHER
 $notif_stmt->execute([$user_id]);
 $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +75,7 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>User Profile</h2>
         <p><strong>Name:</strong> <?= htmlspecialchars($user['fullname']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+        <p><strong>Contact:</strong> <?= htmlspecialchars($user['contact'] ?? 'N/A') ?></p>
         <p><strong>Description:</strong> <?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
         <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
