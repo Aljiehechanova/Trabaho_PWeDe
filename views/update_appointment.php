@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt = $conn->prepare("UPDATE job_appointments SET appointment_date = ?, appointment_time = ?, status = 'Scheduled' WHERE jobpost_id = ?");
         $stmt->execute([$date, $time, $jobpost_id]);
-        header("Location: admin_appointments.php");
+        header("Location: adapp.php");
     } catch (PDOException $e) {
         echo "Update failed: " . $e->getMessage();
     }

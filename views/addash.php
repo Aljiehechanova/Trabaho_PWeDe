@@ -159,36 +159,29 @@ try {
 </div>
     <!-- Pie Chart Section -->
     <div class="section-box">
-        <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
-        <div class="chart-container d-flex justify-content-center">
+      <h5 class="text-center">Applicants by Disability Type (Pie Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantPieChart" height="300"></canvas>
-        </div>
+      </div>
+      <div id="userList" class="mt-4 p-3 bg-light border rounded shadow-sm">
+        <h6 class="fw-bold">Click on a slice to view users by disability.</h6>
+        <ul class="list-unstyled mb-0" id="userListContent"></ul>
+      </div>
     </div>
 
     <!-- Bar Chart Section -->
     <div class="section-box">
-        <h5 class="text-center">Workshop Volunteer by Month (Bar Chart)</h5>
-        <div class="chart-container d-flex justify-content-center">
+      <h5 class="text-center">Workshop Volunteer by Month (Bar Chart)</h5>
+      <div class="chart-container d-flex justify-content-center">
         <canvas id="applicantBarChart" height="300"></canvas>
-        </div>
+      </div>
+      
+      <!-- ✅ Volunteer List Output Section -->
+      <div id="volunteerList" class="mt-4 p-3 bg-light border rounded shadow-sm">
+        <h6 class="fw-bold">Click on a bar to view volunteers for that month.</h6>
+        <ul class="list-unstyled mb-0" id="volunteerListContent"></ul>
+      </div>
     </div>
-    <div class="section-box">
-  <h5 class="text-center">Number of Users per Disability Type with Workshop Participation</h5>
-  <div class="chart-container d-flex justify-content-center">
-    <canvas id="workshopDonut" width="400" height="300"></canvas>
-  </div>
-</div>
-
-
-<!-- Bar Chart -->
-<div class="section-box">
-  <h5 class="text-center">Workshop Activity Per Month (Bar Chart)</h5>
-  <div class="chart-container d-flex justify-content-center">
-    <canvas id="workshopBar" width="400" height="300"></canvas>
-  </div>
-    </div>
-  </div>
-
 
 </div>
 </div>
