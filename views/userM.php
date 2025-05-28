@@ -144,7 +144,7 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="modal-content">
                 <span class="close" onclick="document.getElementById('sendModal').style.display='none'">&times;</span>
                 <h2>Send Message</h2>
-                <form action="SM.php" method="POST">
+                <form action="USM.php" method="POST">
                     <label for="receiver_email">Send To (Email):</label>
                     <input type="email" name="receiver_email" required>
 

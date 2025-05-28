@@ -104,7 +104,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal-content">
       <span class="close" onclick="document.getElementById('sendModal').style.display='none'">&times;</span>
       <h2>Send Message</h2>
-      <form action="send_message.php" method="POST">
+      <form action="CSM.php" method="POST">
         <label for="receiver_email">Send To (Email):</label>
         <input type="email" name="receiver_email" required>
 
