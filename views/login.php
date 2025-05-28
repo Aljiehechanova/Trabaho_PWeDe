@@ -46,9 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Trabaho PWeDe - Login</title>
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
-
 <body>
     <div class="login-container">
+        <!-- Go Back Button -->
+        <a href="home.php" style="position: absolute; top: 20px; left: 20px; text-decoration: none; background-color: #007bff; color: white; padding: 8px 12px; border-radius: 5px;">← Go Back</a>
+
         <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Trabaho PWeDe Logo" class="logo">
         <h1>LOGIN TO YOUR ACCOUNT</h1>
 
@@ -74,5 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <p class="signup">Don’t have a Trabaho PWeDe account? <a href="RC.php">Sign up</a></p>
     </div>
 </body>
+
 
 </html>

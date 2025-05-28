@@ -10,7 +10,7 @@
     <nav class="navbar">
         <div class="logo">
             <img src="../assets/images/TrabahoPWeDeLogo.png" alt="Trabaho PWeDe Logo">
-            <span>Trabaho PWeDe</span>
+            <span>Trabaho <span style="color: blue; font-weight: bold;">PWeDe</span></span>
         </div>
         <div class="nav-links">
             <a href="#">Why Trabaho PWeDe</a>

@@ -1,7 +1,7 @@
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #2C3E50;
+  background-color: #D6EAF8;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,4 +140,8 @@ form {
 .signup a {
   text-decoration: none;
   color: #007bff;
+}
+.login-container {
+  position: relative;
+  /* other styles */
 }
