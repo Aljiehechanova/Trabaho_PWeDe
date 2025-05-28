@@ -16,22 +16,13 @@ try {
         die("User not found.");
     }
 
-    // Required fields (resume is optional)
-    $requiredFields = ['fullname', 'location', 'disability', 'contact'];
+    $requiredFields = ['fullname', 'location', 'disability', 'contact_number'];
     $missingFields = [];
 
     foreach ($requiredFields as $field) {
         if (empty($user[$field])) {
             $missingFields[] = $field;
         }
-    }
-
-    if (!empty($missingFields)) {
-        echo "<script>
-            alert('Please complete your profile before accessing this page. Missing: " . implode(', ', $missingFields) . "');
-            window.location.href = 'edit_profile.php';
-        </script>";
-        exit;
     }
 
     $loggedInEmail = $user['email'];
@@ -53,29 +44,34 @@ $notif_stmt->execute([$user_id]);
 $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Profile - Trabaho PWeDe</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/user_profile.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 
 <div class="container mt-5">
-    <div class="mb-3">
-        <a href="UserD.php" class="btn btn-outline-primary">&larr; Go to Dashboard</a>
-    </div>
+    <?php if (empty($missingFields)): ?>
+        <div class="mb-3">
+            <a href="UserD.php" class="btn btn-outline-primary">&larr; Go to Dashboard</a>
+        </div>
+    <?php else: ?>
+        <div class="mb-3">
+            <button class="btn btn-outline-secondary" disabled>&larr; Go to Dashboard</button>
+        </div>
+    <?php endif; ?>
+
     <div class="profile-card text-center">
         <img src="<?= htmlspecialchars($user['img']) ?>" alt="Profile Picture" onerror="this.onerror=null;this.src='../assets/images/alterprofile.png';" class="profile-img" data-bs-toggle="modal" data-bs-target="#editPhotoModal">
         <h2>User Profile</h2>
         <p><strong>Name:</strong> <?= htmlspecialchars($user['fullname']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-        <p><strong>Contact:</strong> <?= htmlspecialchars($user['contact'] ?? 'N/A') ?></p>
+        <p><strong>Contact:</strong> <?= htmlspecialchars($user['contact_number'] ?? 'N/A') ?></p>
         <p><strong>Description:</strong> <?= htmlspecialchars($user['description'] ?? 'N/A') ?></p>
         <p><strong>Location:</strong> <?= htmlspecialchars($user['location'] ?? 'N/A') ?></p>
         <p><strong>Disability:</strong> <?= htmlspecialchars($user['disability'] ?? 'N/A') ?></p>
@@ -127,32 +123,69 @@ $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Webcam and Print Scripts -->
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+     data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form action="update_profile.php" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                </div>
+                <div class="modal-body row g-3">
+                    <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                    <div class="col-md-6">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="fullname" value="<?= htmlspecialchars($user['fullname']) ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email (read-only)</label>
+                        <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="contact_number" class="form-label">Contact</label>
+                        <input type="text" class="form-control" name="contact_number" value="<?= htmlspecialchars($user['contact_number']) ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" name="location" value="<?= htmlspecialchars($user['location']) ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="disability" class="form-label">Disability</label>
+                        <input type="text" class="form-control" name="disability" value="<?= htmlspecialchars($user['disability']) ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="2"><?= htmlspecialchars($user['description']) ?></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="img" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" name="img">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Lock Modal If Required Fields Missing -->
+<?php if (!empty($missingFields)): ?>
 <script>
-function capture() {
-    const canvas = document.getElementById('canvas');
-    const video = document.getElementById('video');
-    const ctx = canvas.getContext('2d');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-    video.style.display = 'none';
-    document.getElementById('webcam_image').value = canvas.toDataURL('image/png');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('video');
-    if (navigator.mediaDevices?.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(error => console.warn("Webcam access denied or not available:", error));
-    }
+document.addEventListener("DOMContentLoaded", function() {
+    alert("Please complete your profile before accessing this page. Missing: <?= implode(', ', $missingFields) ?>");
+    var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+    modal.show();
 });
+</script>
+<?php endif; ?>
 
+<script>
 function printResume() {
     const iframe = document.querySelector('#resumeModal iframe');
     if (iframe) {

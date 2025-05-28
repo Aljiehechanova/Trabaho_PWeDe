@@ -89,12 +89,10 @@ class UserController
     {
         return $this->userModel->getUserByEmail($email) ? true : false;
     }
-    public function updateProfile($user_id, $fullname, $email, $description, $location, $disability)
-    {
-        return $this->userModel->updateUser($user_id, $fullname, $email, $description, $location, $disability);
-    }
-
-
+    public function updateProfile($user_id, $fullname, $email, $description, $location, $disability, $contact_number, $imgPath = null)
+{
+    return $this->userModel->updateUser($user_id, $fullname, $email, $description, $location, $disability, $contact_number, $imgPath);
+}
 
 }
 

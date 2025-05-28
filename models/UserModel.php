@@ -97,23 +97,32 @@ class UserModel
     // Profile Update
     // --------------------------
 
-    public function updateUser($id, $fullname, $email, $description, $location, $disability)
-    {
-        $sql = "UPDATE users 
-                SET fullname = :fullname, email = :email, description = :description, 
-                    location = :location, disability = :disability_type 
-                WHERE user_id = :user_id";
+    public function updateUser($id, $fullname, $email, $description, $location, $disability, $contact_number, $imgPath = null)
+{
+    $sql = "UPDATE users 
+            SET fullname = :fullname, email = :email, description = :description, 
+                location = :location, disability = :disability, contact_number = :contact_number";
 
-        $stmt = $this->conn->prepare($sql);
+    $params = [
+        ':fullname' => $fullname,
+        ':email' => $email,
+        ':description' => $description,
+        ':location' => $location,
+        ':disability' => $disability,
+        ':contact_number' => $contact_number
+    ];
 
-        return $stmt->execute([
-            ':fullname' => $fullname,
-            ':email' => $email,
-            ':description' => $description,
-            ':location' => $location,
-            ':disability_type' => $disability,
-            ':user_id' => $id
-        ]);
+    if ($imgPath !== null) {
+        $sql .= ", img = :img";
+        $params[':img'] = $imgPath;
     }
+
+    $sql .= " WHERE user_id = :user_id";
+    $params[':user_id'] = $id;
+
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute($params);
+}
+
 }
 ?>
